@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace EramDev\Pardakht\Http;
+namespace Eram\Pardakht\Http;
 
-use EramDev\Pardakht\Exception\ConnectionException;
+use Eram\Pardakht\Exception\ConnectionException;
 
 /**
  * Factory for creating configured SoapClient instances for Iranian bank gateways.

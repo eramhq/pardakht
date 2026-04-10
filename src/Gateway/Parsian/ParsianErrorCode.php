@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace EramDev\Pardakht\Gateway\Parsian;
+namespace Eram\Pardakht\Gateway\Parsian;
 
 enum ParsianErrorCode: int
 {

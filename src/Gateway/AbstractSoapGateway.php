@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace EramDev\Pardakht\Gateway;
+namespace Eram\Pardakht\Gateway;
 
-use EramDev\Pardakht\Contracts\GatewayInterface;
-use EramDev\Pardakht\Contracts\TransactionInterface;
-use EramDev\Pardakht\Exception\ConnectionException;
-use EramDev\Pardakht\Http\PurchaseRequest;
-use EramDev\Pardakht\Http\RedirectResponse;
-use EramDev\Pardakht\Http\SoapClientFactory;
+use Eram\Pardakht\Contracts\GatewayInterface;
+use Eram\Pardakht\Contracts\TransactionInterface;
+use Eram\Pardakht\Exception\ConnectionException;
+use Eram\Pardakht\Http\PurchaseRequest;
+use Eram\Pardakht\Http\RedirectResponse;
+use Eram\Pardakht\Http\SoapClientFactory;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;

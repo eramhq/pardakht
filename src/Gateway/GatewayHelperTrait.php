@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace EramDev\Pardakht\Gateway;
+namespace Eram\Pardakht\Gateway;
 
-use EramDev\Pardakht\Event\PaymentFailed;
-use EramDev\Pardakht\Exception\GatewayException;
-use EramDev\Pardakht\Exception\VerificationException;
+use Eram\Pardakht\Event\PaymentFailed;
+use Eram\Pardakht\Exception\GatewayException;
+use Eram\Pardakht\Exception\VerificationException;
 use Psr\EventDispatcher\EventDispatcherInterface;
 
 trait GatewayHelperTrait

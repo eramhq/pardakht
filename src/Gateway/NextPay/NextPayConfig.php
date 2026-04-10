@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace EramDev\Pardakht\Gateway\NextPay;
+namespace Eram\Pardakht\Gateway\NextPay;
 
 final class NextPayConfig
 {

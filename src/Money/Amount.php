@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace EramDev\Pardakht\Money;
+namespace Eram\Pardakht\Money;
 
-use EramDev\Pardakht\Exception\InvalidAmountException;
+use Eram\Pardakht\Exception\InvalidAmountException;
 
 /**
  * Immutable value object representing a monetary amount.

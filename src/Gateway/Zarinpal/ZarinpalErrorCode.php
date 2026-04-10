@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace EramDev\Pardakht\Gateway\Zarinpal;
+namespace Eram\Pardakht\Gateway\Zarinpal;
 
 enum ZarinpalErrorCode: int
 {

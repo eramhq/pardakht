@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace EramDev\Pardakht\Tests\Unit\Gateway;
+namespace Eram\Pardakht\Tests\Unit\Gateway;
 
-use EramDev\Pardakht\Exception\VerificationException;
-use EramDev\Pardakht\Gateway\Saman\SamanConfig;
-use EramDev\Pardakht\Gateway\Saman\SamanGateway;
-use EramDev\Pardakht\Http\PurchaseRequest;
-use EramDev\Pardakht\Http\SoapClientFactory;
-use EramDev\Pardakht\Money\Amount;
-use EramDev\Pardakht\Transaction\TransactionStatus;
+use Eram\Pardakht\Exception\VerificationException;
+use Eram\Pardakht\Gateway\Saman\SamanConfig;
+use Eram\Pardakht\Gateway\Saman\SamanGateway;
+use Eram\Pardakht\Http\PurchaseRequest;
+use Eram\Pardakht\Http\SoapClientFactory;
+use Eram\Pardakht\Money\Amount;
+use Eram\Pardakht\Transaction\TransactionStatus;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 

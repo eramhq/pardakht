@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace EramDev\Pardakht\Gateway\IDPay;
+namespace Eram\Pardakht\Gateway\IDPay;
 
 final class IDPayConfig
 {

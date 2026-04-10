@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace EramDev\Pardakht\Money;
+namespace Eram\Pardakht\Money;
 
 enum Currency: string
 {

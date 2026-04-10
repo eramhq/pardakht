@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace EramDev\Pardakht\Exception;
+namespace Eram\Pardakht\Exception;
 
 abstract class PardakhtException extends \RuntimeException
 {

@@ -2,23 +2,23 @@
 
 declare(strict_types=1);
 
-namespace EramDev\Pardakht\Gateway\Saman;
+namespace Eram\Pardakht\Gateway\Saman;
 
-use EramDev\Pardakht\Contracts\TransactionInterface;
-use EramDev\Pardakht\Event\CallbackReceived;
-use EramDev\Pardakht\Event\PaymentFailed;
-use EramDev\Pardakht\Event\PaymentVerified;
-use EramDev\Pardakht\Event\PurchaseInitiated;
-use EramDev\Pardakht\Exception\GatewayException;
-use EramDev\Pardakht\Exception\VerificationException;
-use EramDev\Pardakht\Gateway\AbstractSoapGateway;
-use EramDev\Pardakht\Http\PurchaseRequest;
-use EramDev\Pardakht\Http\RedirectResponse;
-use EramDev\Pardakht\Http\SoapClientFactory;
-use EramDev\Pardakht\Money\Amount;
-use EramDev\Pardakht\Transaction\Transaction;
-use EramDev\Pardakht\Transaction\TransactionId;
-use EramDev\Pardakht\Transaction\TransactionStatus;
+use Eram\Pardakht\Contracts\TransactionInterface;
+use Eram\Pardakht\Event\CallbackReceived;
+use Eram\Pardakht\Event\PaymentFailed;
+use Eram\Pardakht\Event\PaymentVerified;
+use Eram\Pardakht\Event\PurchaseInitiated;
+use Eram\Pardakht\Exception\GatewayException;
+use Eram\Pardakht\Exception\VerificationException;
+use Eram\Pardakht\Gateway\AbstractSoapGateway;
+use Eram\Pardakht\Http\PurchaseRequest;
+use Eram\Pardakht\Http\RedirectResponse;
+use Eram\Pardakht\Http\SoapClientFactory;
+use Eram\Pardakht\Money\Amount;
+use Eram\Pardakht\Transaction\Transaction;
+use Eram\Pardakht\Transaction\TransactionId;
+use Eram\Pardakht\Transaction\TransactionStatus;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
 

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace EramDev\Pardakht\Tests\Unit\Money;
+namespace Eram\Pardakht\Tests\Unit\Money;
 
-use EramDev\Pardakht\Money\Currency;
+use Eram\Pardakht\Money\Currency;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 

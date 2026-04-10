@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace EramDev\Pardakht\Tests\Unit\Gateway;
+namespace Eram\Pardakht\Tests\Unit\Gateway;
 
-use EramDev\Pardakht\Exception\GatewayException;
-use EramDev\Pardakht\Exception\VerificationException;
-use EramDev\Pardakht\Gateway\IDPay\IDPayConfig;
-use EramDev\Pardakht\Gateway\IDPay\IDPayGateway;
-use EramDev\Pardakht\Http\PurchaseRequest;
-use EramDev\Pardakht\Money\Amount;
-use EramDev\Pardakht\Transaction\TransactionStatus;
+use Eram\Pardakht\Exception\GatewayException;
+use Eram\Pardakht\Exception\VerificationException;
+use Eram\Pardakht\Gateway\IDPay\IDPayConfig;
+use Eram\Pardakht\Gateway\IDPay\IDPayGateway;
+use Eram\Pardakht\Http\PurchaseRequest;
+use Eram\Pardakht\Money\Amount;
+use Eram\Pardakht\Transaction\TransactionStatus;
 use GuzzleHttp\Psr7\HttpFactory;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;

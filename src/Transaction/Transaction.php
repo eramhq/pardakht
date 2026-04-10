@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace EramDev\Pardakht\Transaction;
+namespace Eram\Pardakht\Transaction;
 
-use EramDev\Pardakht\Contracts\TransactionInterface;
-use EramDev\Pardakht\Money\Amount;
+use Eram\Pardakht\Contracts\TransactionInterface;
+use Eram\Pardakht\Money\Amount;
 
 final class Transaction implements TransactionInterface
 {
@@ -67,7 +67,7 @@ final class Transaction implements TransactionInterface
         return $this->extra;
     }
 
-    public function withStatus(TransactionStatus $status): self
+    public function withStatus(TransactionStatus $status): static
     {
         return new self(
             $this->id,

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace EramDev\Pardakht\Contracts;
+namespace Eram\Pardakht\Contracts;
 
-use EramDev\Pardakht\Http\PurchaseRequest;
-use EramDev\Pardakht\Http\RedirectResponse;
+use Eram\Pardakht\Http\PurchaseRequest;
+use Eram\Pardakht\Http\RedirectResponse;
 
 interface GatewayInterface
 {

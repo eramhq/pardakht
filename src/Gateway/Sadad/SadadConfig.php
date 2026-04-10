@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace EramDev\Pardakht\Gateway\Sadad;
+namespace Eram\Pardakht\Gateway\Sadad;
 
 final class SadadConfig
 {

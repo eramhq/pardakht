@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace EramDev\Pardakht\Gateway\Vandar;
+namespace Eram\Pardakht\Gateway\Vandar;
 
-use EramDev\Pardakht\Contracts\TransactionInterface;
-use EramDev\Pardakht\Event\CallbackReceived;
-use EramDev\Pardakht\Event\PaymentVerified;
-use EramDev\Pardakht\Event\PurchaseInitiated;
-use EramDev\Pardakht\Gateway\AbstractGateway;
-use EramDev\Pardakht\Http\PurchaseRequest;
-use EramDev\Pardakht\Http\RedirectResponse;
-use EramDev\Pardakht\Money\Amount;
-use EramDev\Pardakht\Transaction\Transaction;
-use EramDev\Pardakht\Transaction\TransactionId;
-use EramDev\Pardakht\Transaction\TransactionStatus;
+use Eram\Pardakht\Contracts\TransactionInterface;
+use Eram\Pardakht\Event\CallbackReceived;
+use Eram\Pardakht\Event\PaymentVerified;
+use Eram\Pardakht\Event\PurchaseInitiated;
+use Eram\Pardakht\Gateway\AbstractGateway;
+use Eram\Pardakht\Http\PurchaseRequest;
+use Eram\Pardakht\Http\RedirectResponse;
+use Eram\Pardakht\Money\Amount;
+use Eram\Pardakht\Transaction\Transaction;
+use Eram\Pardakht\Transaction\TransactionId;
+use Eram\Pardakht\Transaction\TransactionStatus;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;

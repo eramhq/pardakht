@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace EramDev\Pardakht\Gateway\Pasargad;
+namespace Eram\Pardakht\Gateway\Pasargad;
 
 enum PasargadErrorCode: int
 {

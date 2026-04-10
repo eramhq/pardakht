@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace EramDev\Pardakht\Transaction;
+namespace Eram\Pardakht\Transaction;
 
 /**
  * Value object wrapping a gateway-specific transaction identifier.

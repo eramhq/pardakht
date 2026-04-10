@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace EramDev\Pardakht\Gateway\Sizpay;
+namespace Eram\Pardakht\Gateway\Sizpay;
 
 final class SizpayConfig
 {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace EramDev\Pardakht\Contracts;
+namespace Eram\Pardakht\Contracts;
 
 /**
  * Implemented by gateways that require a separate settlement step after verification.

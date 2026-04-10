@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace EramDev\Pardakht\Banking;
+namespace Eram\Pardakht\Banking;
 
 /**
  * Maps card BIN (first 6 digits) to Iranian bank names.

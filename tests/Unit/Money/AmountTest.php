@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace EramDev\Pardakht\Tests\Unit\Money;
+namespace Eram\Pardakht\Tests\Unit\Money;
 
-use EramDev\Pardakht\Money\Amount;
-use EramDev\Pardakht\Money\AmountMismatchException;
+use Eram\Pardakht\Money\Amount;
+use Eram\Pardakht\Exception\InvalidAmountException;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -41,7 +41,7 @@ final class AmountTest extends TestCase
     #[Test]
     public function throws_on_negative_amount(): void
     {
-        $this->expectException(AmountMismatchException::class);
+        $this->expectException(InvalidAmountException::class);
 
         Amount::fromRials(-100);
     }
@@ -81,7 +81,7 @@ final class AmountTest extends TestCase
     #[Test]
     public function subtract_below_zero_throws(): void
     {
-        $this->expectException(AmountMismatchException::class);
+        $this->expectException(InvalidAmountException::class);
 
         $a = Amount::fromToman(10_000);
         $b = Amount::fromToman(20_000);

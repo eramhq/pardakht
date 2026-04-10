@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace EramDev\Pardakht\Event;
+namespace Eram\Pardakht\Event;
 
-use EramDev\Pardakht\Contracts\TransactionInterface;
+use Eram\Pardakht\Contracts\TransactionInterface;
 
 final class PaymentSettled
 {

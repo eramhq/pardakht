@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace EramDev\Pardakht\Http;
+namespace Eram\Pardakht\Http;
 
-use EramDev\Pardakht\Money\Amount;
+use Eram\Pardakht\Money\Amount;
 
 /**
  * Immutable DTO representing a purchase request to a gateway.

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace EramDev\Pardakht\Contracts;
+namespace Eram\Pardakht\Contracts;
 
-use EramDev\Pardakht\Money\Amount;
+use Eram\Pardakht\Money\Amount;
 
 /**
  * Implemented by gateways that support refunding payments.

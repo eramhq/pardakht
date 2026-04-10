@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace EramDev\Pardakht\Tests\Unit\Gateway;
+namespace Eram\Pardakht\Tests\Unit\Gateway;
 
-use EramDev\Pardakht\Exception\GatewayException;
-use EramDev\Pardakht\Exception\VerificationException;
-use EramDev\Pardakht\Gateway\Zarinpal\ZarinpalConfig;
-use EramDev\Pardakht\Gateway\Zarinpal\ZarinpalGateway;
-use EramDev\Pardakht\Http\PurchaseRequest;
-use EramDev\Pardakht\Money\Amount;
-use EramDev\Pardakht\Transaction\TransactionStatus;
+use Eram\Pardakht\Exception\GatewayException;
+use Eram\Pardakht\Exception\VerificationException;
+use Eram\Pardakht\Gateway\Zarinpal\ZarinpalConfig;
+use Eram\Pardakht\Gateway\Zarinpal\ZarinpalGateway;
+use Eram\Pardakht\Http\PurchaseRequest;
+use Eram\Pardakht\Money\Amount;
+use Eram\Pardakht\Transaction\TransactionStatus;
 use GuzzleHttp\Psr7\HttpFactory;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;

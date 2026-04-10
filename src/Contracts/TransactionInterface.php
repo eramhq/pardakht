@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace EramDev\Pardakht\Contracts;
+namespace Eram\Pardakht\Contracts;
 
-use EramDev\Pardakht\Money\Amount;
-use EramDev\Pardakht\Transaction\TransactionId;
-use EramDev\Pardakht\Transaction\TransactionStatus;
+use Eram\Pardakht\Money\Amount;
+use Eram\Pardakht\Transaction\TransactionId;
+use Eram\Pardakht\Transaction\TransactionStatus;
 
 interface TransactionInterface
 {

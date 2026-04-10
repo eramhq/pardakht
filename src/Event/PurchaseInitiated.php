@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace EramDev\Pardakht\Event;
+namespace Eram\Pardakht\Event;
 
-use EramDev\Pardakht\Http\PurchaseRequest;
+use Eram\Pardakht\Http\PurchaseRequest;
 
 final class PurchaseInitiated
 {

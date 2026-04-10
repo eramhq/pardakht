@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace EramDev\Pardakht\Tests\Unit\Banking;
+namespace Eram\Pardakht\Tests\Unit\Banking;
 
-use EramDev\Pardakht\Banking\Sheba;
+use Eram\Pardakht\Banking\Sheba;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 

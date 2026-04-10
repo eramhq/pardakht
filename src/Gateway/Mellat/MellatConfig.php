@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace EramDev\Pardakht\Gateway\Mellat;
+namespace Eram\Pardakht\Gateway\Mellat;
 
 final class MellatConfig
 {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace EramDev\Pardakht\Gateway\Vandar;
+namespace Eram\Pardakht\Gateway\Vandar;
 
 final class VandarConfig
 {

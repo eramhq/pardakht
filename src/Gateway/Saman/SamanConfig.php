@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace EramDev\Pardakht\Gateway\Saman;
+namespace Eram\Pardakht\Gateway\Saman;
 
 final class SamanConfig
 {

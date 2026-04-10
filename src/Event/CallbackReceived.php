@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace EramDev\Pardakht\Event;
+namespace Eram\Pardakht\Event;
 
 final class CallbackReceived
 {

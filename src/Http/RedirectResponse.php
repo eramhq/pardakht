@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace EramDev\Pardakht\Http;
+namespace Eram\Pardakht\Http;
 
 /**
  * Represents the response from a purchase request — either a redirect URL

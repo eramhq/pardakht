@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace EramDev\Pardakht\Banking;
+namespace Eram\Pardakht\Banking;
 
 /**
  * Iranian IBAN (Sheba) value object with validation and bank detection.
