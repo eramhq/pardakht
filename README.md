@@ -11,7 +11,7 @@ A simple, type-safe PHP library for Iranian payment gateways.
 ## Install
 
 ```bash
-composer require eramhq/pardakht guzzlehttp/guzzle guzzlehttp/psr7
+composer require eram/pardakht
 ```
 
 ## Usage

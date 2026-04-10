@@ -9,7 +9,7 @@
 ## نصب
 
 ```bash
-composer require eramdev/pardakht guzzlehttp/guzzle guzzlehttp/psr7
+composer require eram/pardakht
 ```
 
 ## شروع سریع
