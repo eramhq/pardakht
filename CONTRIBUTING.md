@@ -16,7 +16,7 @@ Thank you for your interest in contributing to Pardakht!
 ## Development Setup
 
 ```bash
-git clone https://github.com/eramdev/pardakht.git
+git clone https://github.com/eramhq/pardakht.git
 cd pardakht
 composer install
 ```
