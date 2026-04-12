@@ -58,7 +58,7 @@ Full documentation with API reference, cookbook, gateway guides, and more:
 
 ## About Eram
 
-[Eram](https://github.com/eramhq) is a small engineering team building open-source developer tools for the Persian ecosystem. Our projects — [pardakht](https://github.com/eramhq/pardakht), [daynum](https://github.com/eramhq/daynum), [persian-kit](https://github.com/eramhq/persian-kit) — solve the everyday problems that Iranian developers run into: payment integration, calendar conversion, and string/number localization. Everything we ship is MIT-licensed, zero-dependency where possible, and built to be boring infrastructure you never have to think about.
+[Eram](https://eram.dev) is a small engineering team building open-source developer tools for the Persian ecosystem. Our projects — [pardakht](https://github.com/eramhq/pardakht), [daynum](https://github.com/eramhq/daynum), [persian-kit](https://github.com/eramhq/persian-kit) — solve the everyday problems that Iranian developers run into: payment integration, calendar conversion, and string/number localization. Everything we ship is MIT-licensed, zero-dependency where possible, and built to be boring infrastructure you never have to think about.
 
 ## License
 
