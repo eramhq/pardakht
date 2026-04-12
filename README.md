@@ -6,7 +6,7 @@ A simple, type-safe PHP library for Iranian payment gateways.
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![PHP](https://img.shields.io/badge/php-%5E8.1-8892BF.svg)](https://php.net/)
 
-[**مستندات فارسی**](README.fa.md)
+**Documentation:** [English](docs/en/README.md) | [فارسی](docs/fa/README.md)
 
 ## Install
 
@@ -81,74 +81,13 @@ That's the whole API. Every gateway follows the same five steps; only the config
 | `vandar` | Vandar | `VandarConfig` | No |
 | `sizpay` | Sizpay | `SizpayConfig` | No |
 
-## Amount (Rial/Toman Safe)
+## Learn More
 
-The `Amount` value object eliminates the most common Iranian payment bug: mixing Rial and Toman.
+Full documentation with API reference, cookbook, gateway guides, and more:
 
-```php
-use Eram\Pardakht\Money\Amount;
-
-$amount = Amount::fromToman(50_000);
-$amount->inRials();   // 500000
-$amount->inToman();   // 50000
-
-$sum = $amount->add(Amount::fromToman(10_000));
-$sum->inToman();      // 60000
-
-$amount->greaterThan(Amount::fromToman(20_000));  // true
-$amount->equals(Amount::fromRials(500_000));      // true
-```
-
-## Banking Utilities
-
-```php
-use Eram\Pardakht\Banking\CardNumber;
-use Eram\Pardakht\Banking\Sheba;
-
-// Card number — Luhn validation + bank detection
-$card = new CardNumber('6037-9900-0000-0006');
-$card->number();     // '6037990000000006'
-$card->masked();     // '603799******0006'
-$card->formatted();  // '6037-9900-0000-0006'
-$card->bankName();   // 'بانک ملی ایران'
-CardNumber::isValid('6037990000000006'); // true
-
-// Sheba (Iranian IBAN) — checksum validation + bank detection
-$sheba = new Sheba('IR062960000000100324200001');
-$sheba->value();     // 'IR062960000000100324200001'
-$sheba->formatted(); // 'IR06 2960 0000 0010 0324 2000 01'
-$sheba->bankName();  // detected from Sheba code
-Sheba::isValid('IR062960000000100324200001'); // true
-```
-
-## Custom HTTP Client
-
-Pardakht ships with a built-in `CurlHttpClient` and has **zero packagist dependencies**. If you need a custom HTTP client, implement the single-method interface:
-
-```php
-use Eram\Pardakht\Http\HttpClient;
-use Eram\Pardakht\Http\HttpResponse;
-
-class MyHttpClient implements HttpClient
-{
-    public function postJson(string $url, string $body, array $headers = []): HttpResponse
-    {
-        // your implementation
-        return new HttpResponse(200, $responseBody);
-    }
-}
-
-$pardakht = new Pardakht(httpClient: new MyHttpClient());
-```
-
-## Events
-
-Implement `Eram\Pardakht\Http\EventDispatcher` to receive lifecycle events: `PurchaseInitiated`, `CallbackReceived`, `PaymentVerified`, `PaymentSettled`, `PaymentFailed`.
-
-```php
-$pardakht = new Pardakht(eventDispatcher: $yourDispatcher);
-```
+- [English Documentation](docs/en/README.md)
+- [مستندات فارسی](docs/fa/README.md)
 
 ## License
 
-MIT - Built by [Eram.dev](https://eram.dev)
+MIT - Built by [Eram](https://github.com/eramhq) — open-source tools for the Persian ecosystem ([daynum](https://github.com/eramhq/daynum), [pardakht](https://github.com/eramhq/pardakht), [persian-kit](https://github.com/eramhq/persian-kit))
