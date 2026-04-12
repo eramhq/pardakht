@@ -6,6 +6,8 @@
 
 ## پیکربندی
 
+<div dir="ltr">
+
 ```php
 use Eram\Pardakht\Gateway\Zibal\ZibalConfig;
 
@@ -14,11 +16,15 @@ $config = new ZibalConfig(
 );
 ```
 
+</div>
+
 | پارامتر | نوع | الزامی | توضیحات |
 |-----------|------|----------|-------------|
 | `merchant` | `string` | بله | کد مرچنت زیبال |
 
 ## خرید
+
+<div dir="ltr">
 
 ```php
 $gateway = $pardakht->create('zibal', $config);
@@ -34,11 +40,17 @@ $response = $gateway->purchase(new PurchaseRequest(
 header('Location: ' . $response->getUrl());
 ```
 
+</div>
+
 ## تایید
+
+<div dir="ltr">
 
 ```php
 $transaction = $gateway->verify();
 ```
+
+</div>
 
 ## تسویه
 

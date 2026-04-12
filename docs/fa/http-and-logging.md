@@ -6,6 +6,8 @@
 
 ## اینترفیس HttpClient
 
+<div dir="ltr">
+
 ```php
 namespace Eram\Pardakht\Http;
 
@@ -15,17 +17,25 @@ interface HttpClient
 }
 ```
 
+</div>
+
 قرارداد تک‌متدی، ساخت آداپتور برای هر کتابخانه HTTP را بسیار آسان می‌کند.
 
 ### پیش‌فرض: CurlHttpClient
 
 کلاینت پیش‌فرض مستقیماً از `ext-curl` استفاده می‌کند. نیازی به پیکربندی نیست:
 
+<div dir="ltr">
+
 ```php
 $pardakht = new Pardakht(); // به‌طور پیش‌فرض از CurlHttpClient استفاده می‌کند
 ```
 
+</div>
+
 ### مثال آداپتور سفارشی
+
+<div dir="ltr">
 
 ```php
 use Eram\Pardakht\Http\HttpClient;
@@ -63,7 +73,11 @@ class SymfonyHttpClientAdapter implements HttpClient
 }
 ```
 
+</div>
+
 ## HttpResponse
+
+<div dir="ltr">
 
 ```php
 final class HttpResponse
@@ -77,7 +91,11 @@ final class HttpResponse
 }
 ```
 
+</div>
+
 ## اینترفیس Logger
+
+<div dir="ltr">
 
 ```php
 namespace Eram\Pardakht\Http;
@@ -88,17 +106,25 @@ interface Logger
 }
 ```
 
+</div>
+
 فقط سطح `debug` استفاده می‌شود. درگاه‌ها هنگام ارسال درخواست، URL و نام درگاه را لاگ می‌کنند که برای ردیابی فراخوانی‌های HTTP و SOAP در محیط توسعه مفید است.
 
 ### پیش‌فرض: NullLogger
 
 لاگر پیش‌فرض تمام پیام‌ها را دور می‌ریزد:
 
+<div dir="ltr">
+
 ```php
 $pardakht = new Pardakht(); // به‌طور پیش‌فرض از NullLogger استفاده می‌کند
 ```
 
+</div>
+
 ### مثال آداپتور PSR-3
+
+<div dir="ltr">
 
 ```php
 use Eram\Pardakht\Http\Logger;
@@ -115,9 +141,13 @@ class PsrLoggerAdapter implements Logger
 }
 ```
 
+</div>
+
 ## SoapClientFactory
 
 درگاه‌های مبتنی بر SOAP (ملت، سامان، پارسیان) به نمونه `\SoapClient` نیاز دارند. `SoapClientFactory` داخلی آبجکت‌های استاندارد `\SoapClient` می‌سازد. می‌توانید آن را جایگزین کنید تا تنظیمات SOAP را شخصی‌سازی کنید یا یک ماک تزریق کنید:
+
+<div dir="ltr">
 
 ```php
 use Eram\Pardakht\Http\SoapClientFactory;
@@ -125,7 +155,11 @@ use Eram\Pardakht\Http\SoapClientFactory;
 $pardakht = new Pardakht(soapFactory: new SoapClientFactory());
 ```
 
+</div>
+
 ## تزریق وابستگی‌ها
+
+<div dir="ltr">
 
 ```php
 $pardakht = new Pardakht(
@@ -135,6 +169,8 @@ $pardakht = new Pardakht(
     soapFactory: new SoapClientFactory(),
 );
 ```
+
+</div>
 
 تمام پارامترها اختیاری هستند و به هر ترکیبی قابل استفاده‌اند.
 

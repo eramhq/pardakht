@@ -9,9 +9,13 @@
 
 ## نصب
 
+<div dir="ltr">
+
 ```bash
 composer require eram/pardakht
 ```
+
+</div>
 
 پرداخت **هیچ وابستگی Composer** ندارد. فقط به اکستنشن‌های PHP نیاز دارد که در اکثر نصب‌های PHP موجود هستند.
 
@@ -20,6 +24,8 @@ composer require eram/pardakht
 یک جریان پرداخت کامل با زرین‌پال:
 
 ### ۱. ساخت درگاه
+
+<div dir="ltr">
 
 ```php
 use Eram\Pardakht\Pardakht;
@@ -31,7 +37,11 @@ $gateway = $pardakht->create('zarinpal', new ZarinpalConfig(
 ));
 ```
 
+</div>
+
 ### ۲. شروع پرداخت
+
+<div dir="ltr">
 
 ```php
 use Eram\Pardakht\Money\Amount;
@@ -47,7 +57,11 @@ $request = new PurchaseRequest(
 $response = $gateway->purchase($request);
 ```
 
+</div>
+
 ### ۳. انتقال کاربر به درگاه
+
+<div dir="ltr">
 
 ```php
 // برای درگاه‌های REST (زرین‌پال، آی‌دی‌پی و ...) — ریدایرکت ساده
@@ -58,7 +72,11 @@ exit;
 echo $response->renderAutoSubmitForm();
 ```
 
+</div>
+
 ### ۴. مدیریت کالبک
+
+<div dir="ltr">
 
 ```php
 // در هندلر URL بازگشت:
@@ -70,9 +88,13 @@ echo $transaction->getCardNumber();     // شماره کارت پرداخت‌ک
 echo $transaction->getAmount()->inToman(); // 50000
 ```
 
+</div>
+
 ### ۵. تسویه (در صورت نیاز)
 
 برخی درگاه‌های بانکی (ملت، پارسیان) نیاز به مرحله تسویه جداگانه بعد از تایید دارند. اگر این مرحله انجام نشود، پرداخت بعد از ۱۵ تا ۳۰ دقیقه به صورت خودکار برگشت می‌خورد.
+
+<div dir="ltr">
 
 ```php
 use Eram\Pardakht\Contracts\SupportsSettlement;
@@ -81,6 +103,8 @@ if ($gateway instanceof SupportsSettlement) {
     $transaction = $gateway->settle($transaction);
 }
 ```
+
+</div>
 
 ## درگاه‌های پشتیبانی شده
 

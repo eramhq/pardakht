@@ -6,6 +6,8 @@
 
 ## پیکربندی
 
+<div dir="ltr">
+
 ```php
 use Eram\Pardakht\Gateway\Mellat\MellatConfig;
 
@@ -16,6 +18,8 @@ $config = new MellatConfig(
 );
 ```
 
+</div>
+
 | پارامتر | نوع | الزامی | توضیحات |
 |-----------|------|----------|-------------|
 | `terminalId` | `int` | بله | شناسه ترمینال از به‌پرداخت |
@@ -23,6 +27,8 @@ $config = new MellatConfig(
 | `password` | `string` | بله | رمز عبور وب‌سرویس |
 
 ## خرید
+
+<div dir="ltr">
 
 ```php
 $gateway = $pardakht->create('mellat', $config);
@@ -37,15 +43,23 @@ $response = $gateway->purchase(new PurchaseRequest(
 echo $response->renderAutoSubmitForm();
 ```
 
+</div>
+
 ## تایید
+
+<div dir="ltr">
 
 ```php
 $transaction = $gateway->verify();
 ```
 
+</div>
+
 ## تسویه (الزامی)
 
 ملت پس از تایید نیاز به تسویه دارد. اگر این مرحله را رد کنید، پرداخت پس از حدود ۱۵ تا ۳۰ دقیقه به‌طور خودکار برگشت می‌خورد.
+
+<div dir="ltr">
 
 ```php
 use Eram\Pardakht\Contracts\SupportsSettlement;
@@ -54,6 +68,8 @@ if ($gateway instanceof SupportsSettlement) {
     $transaction = $gateway->settle($transaction);
 }
 ```
+
+</div>
 
 ## نکات
 

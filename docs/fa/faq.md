@@ -12,10 +12,14 @@
 
 APIهای درگاه‌های پرداخت ایرانی ناهماهنگ هستند: برخی ریال و برخی تومان می‌خواهند. تبدیل ۱۰ برابری رایج‌ترین منبع باگ‌های پرداخت در تجارت الکترونیک ایران است. با ذخیره همه مبالغ به ریال (کوچک‌ترین واحد) در داخل، هر درگاه به‌طور خودکار به واحد مورد نیاز API خود تبدیل می‌کند. شما با هر واحدی که ترجیح می‌دهید کار کنید:
 
+<div dir="ltr">
+
 ```php
 Amount::fromToman(50_000)->inRials();  // 500,000
 Amount::fromRials(500_000)->inToman(); // 50,000
 ```
+
+</div>
 
 ## تفاوت درگاه‌های SOAP و REST چیست؟
 
@@ -32,7 +36,9 @@ Amount::fromRials(500_000)->inToman(); // 50,000
 چندین گزینه دارید:
 
 1. **حالت سندباکس** — زرین‌پال و آیدی‌پی محیط سندباکس دارند:
-   ```php
+   <div dir="ltr">
+
+```php
    new ZarinpalConfig(merchantId: 'test', sandbox: true);
    new IDPayConfig(apiKey: 'test', sandbox: true);
    ```
@@ -47,21 +53,29 @@ Amount::fromRials(500_000)->inToman(); // 50,000
 
 مثال برای لاراول:
 
-```php
+```
+
+</div>php
 // AppServiceProvider
 $this->app->singleton(Pardakht::class, fn () => new Pardakht(
     logger: new LaravelLogger(),
 ));
+<div dir="ltr">
+
 ```
 
 ## آیا می‌توان از چند درگاه همزمان استفاده کرد؟
 
 بله. یک نمونه `Pardakht` می‌تواند هر تعداد درگاه بسازد:
 
-```php
+```
+
+</div>php
 $pardakht = new Pardakht();
 $zarinpal = $pardakht->create('zarinpal', new ZarinpalConfig('merchant-1'));
 $mellat = $pardakht->create('mellat', new MellatConfig(123, 'user', 'pass'));
+<div dir="ltr">
+
 ```
 
 آن‌ها کلاینت HTTP و لاگر مشترک دارند اما در غیر این صورت مستقل هستند.
@@ -70,19 +84,25 @@ $mellat = $pardakht->create('mellat', new MellatConfig(123, 'user', 'pass'));
 
 هر درگاه پارامترهای متفاوتی در کال‌بک ارسال می‌کند. متد `verify()` این موضوع را انتزاع می‌کند — به‌طور خودکار داده‌های `$_POST` یا `$_GET` را تشخیص داده و آنچه نیاز دارد استخراج می‌کند. همچنین می‌توانید داده‌های کال‌بک را صریحاً ارسال کنید:
 
-```php
+```
+
+</div>php
 // تشخیص خودکار (از $_POST یا $_GET می‌خواند)
 $transaction = $gateway->verify();
 
 // داده صریح (در فریم‌ورک‌ها مفید است)
 $transaction = $gateway->verify($request->all());
+<div dir="ltr">
+
 ```
 
 ## اگر تایید پرداخت ناموفق باشد چه اتفاقی می‌افتد؟
 
 یک `VerificationException` پرتاب می‌شود که از `GatewayException` ارث‌بری دارد. نام درگاه و کد خطا را حمل می‌کند:
 
-```php
+```
+
+</div>php
 try {
     $transaction = $gateway->verify();
 } catch (VerificationException $e) {

@@ -6,6 +6,8 @@
 
 ## پیکربندی
 
+<div dir="ltr">
+
 ```php
 use Eram\Pardakht\Gateway\Pasargad\PasargadConfig;
 
@@ -16,6 +18,8 @@ $config = new PasargadConfig(
 );
 ```
 
+</div>
+
 | پارامتر | نوع | الزامی | توضیحات |
 |-----------|------|----------|-------------|
 | `merchantCode` | `string` | بله | کد مرچنت از پاسارگاد |
@@ -23,6 +27,8 @@ $config = new PasargadConfig(
 | `privateKey` | `string` | بله | کلید خصوصی RSA (فرمت PEM) |
 
 ## خرید
+
+<div dir="ltr">
 
 ```php
 $gateway = $pardakht->create('pasargad', $config);
@@ -36,11 +42,17 @@ $response = $gateway->purchase(new PurchaseRequest(
 header('Location: ' . $response->getUrl());
 ```
 
+</div>
+
 ## تایید
+
+<div dir="ltr">
 
 ```php
 $transaction = $gateway->verify();
 ```
+
+</div>
 
 ## تسویه
 

@@ -6,6 +6,8 @@
 
 ## پیکربندی
 
+<div dir="ltr">
+
 ```php
 use Eram\Pardakht\Gateway\Saman\SamanConfig;
 
@@ -14,11 +16,15 @@ $config = new SamanConfig(
 );
 ```
 
+</div>
+
 | پارامتر | نوع | الزامی | توضیحات |
 |-----------|------|----------|-------------|
 | `merchantId` | `string` | بله | شناسه مرچنت از بانک سامان |
 
 ## خرید
+
+<div dir="ltr">
 
 ```php
 $gateway = $pardakht->create('saman', $config);
@@ -33,11 +39,17 @@ $response = $gateway->purchase(new PurchaseRequest(
 echo $response->renderAutoSubmitForm();
 ```
 
+</div>
+
 ## تایید
+
+<div dir="ltr">
 
 ```php
 $transaction = $gateway->verify();
 ```
+
+</div>
 
 ## تسویه
 

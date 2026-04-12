@@ -8,9 +8,13 @@
 
 </div>
 
+<div dir="ltr">
+
 ```
 Create → Purchase → Redirect → Callback → Verify → [Settle]
 ```
+
+</div>
 
 <div dir="rtl">
 
@@ -25,6 +29,8 @@ Create → Purchase → Redirect → Callback → Verify → [Settle]
 
 تمام درگاه‌ها اینترفیس `GatewayInterface` را پیاده‌سازی می‌کنند که دقیقا دو متد دارد:
 
+<div dir="ltr">
+
 ```php
 interface GatewayInterface
 {
@@ -33,6 +39,8 @@ interface GatewayInterface
     public function verify(?array $callbackData = null): TransactionInterface;
 }
 ```
+
+</div>
 
 یعنی با تغییر یک رشته می‌توانید درگاه را عوض کنید — بقیه کد بدون تغییر باقی می‌ماند.
 
@@ -45,11 +53,15 @@ interface GatewayInterface
 
 از `instanceof` برای مدیریت استفاده کنید:
 
+<div dir="ltr">
+
 ```php
 if ($gateway instanceof SupportsSettlement) {
     $transaction = $gateway->settle($transaction);
 }
 ```
+
+</div>
 
 ## مشکل ریال/تومان
 
@@ -57,11 +69,15 @@ if ($gateway instanceof SupportsSettlement) {
 
 پرداخت این مشکل را با شیء `Amount` حل می‌کند:
 
+<div dir="ltr">
+
 ```php
 $amount = Amount::fromToman(50_000);  // شما با تومان فکر می‌کنید
 $amount->inRials();                    // ۵۰۰٬۰۰۰ — درگاه ریال می‌گیرد
 $amount->inToman();                    // ۵۰٬۰۰۰ — نمایش تومان
 ```
+
+</div>
 
 `Amount` همه چیز را به صورت داخلی به ریال ذخیره می‌کند. هر درگاه می‌داند API‌اش کدام واحد را می‌خواهد و تبدیل خودکار انجام می‌دهد. شما هرگز نیازی به ضرب یا تقسیم بر ۱۰ ندارید.
 
@@ -78,6 +94,8 @@ $amount->inToman();                    // ۵۰٬۰۰۰ — نمایش تومان
 
 سازنده `Pardakht` چهار وابستگی اختیاری می‌پذیرد:
 
+<div dir="ltr">
+
 ```php
 $pardakht = new Pardakht(
     httpClient: $myHttpClient,          // حمل‌ونقل HTTP سفارشی
@@ -86,6 +104,8 @@ $pardakht = new Pardakht(
     soapFactory: $mySoapFactory,        // ساخت کلاینت SOAP سفارشی
 );
 ```
+
+</div>
 
 همه پارامترها اختیاری هستند. پیش‌فرض‌ها مستقیما از `ext-curl` و `ext-soap` استفاده می‌کنند — بدون Guzzle، بدون Symfony، بدون وابستگی به فریمورک.
 
@@ -96,6 +116,8 @@ $pardakht = new Pardakht(
 - **درگاه‌های REST** (زرین‌پال، آی‌دی‌پی، زیبال و ...) یک URL برای ریدایرکت GET ساده برمی‌گردانند.
 - **درگاه‌های SOAP** (ملت، سامان، پارسیان) داده‌های فرم POST برمی‌گردانند. از `renderAutoSubmitForm()` برای تولید فرم HTML خودکار استفاده کنید.
 
+<div dir="ltr">
+
 ```php
 if ($response->isPost()) {
     echo $response->renderAutoSubmitForm();
@@ -103,5 +125,7 @@ if ($response->isPost()) {
     header('Location: ' . $response->getUrl());
 }
 ```
+
+</div>
 
 </div>

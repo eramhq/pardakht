@@ -10,6 +10,8 @@
 
 ### ساخت و اعتبارسنجی
 
+<div dir="ltr">
+
 ```php
 use Eram\Pardakht\Banking\CardNumber;
 
@@ -22,11 +24,15 @@ CardNumber::isValid('6037991234567890'); // true
 CardNumber::isValid('1234567890123456'); // false (بررسی Luhn ناموفق)
 ```
 
+</div>
+
 ساخت در صورت زیر `\InvalidArgumentException` پرتاب می‌کند:
 - شماره دقیقاً ۱۶ رقم نباشد
 - چک‌سام Luhn ناموفق باشد
 
 ### فرمت‌بندی
+
+<div dir="ltr">
 
 ```php
 $card = new CardNumber('6037991234567890');
@@ -36,22 +42,32 @@ $card->formatted(); // "6037-9912-3456-7890"
 $card->masked();    // "603799******7890"
 ```
 
+</div>
+
 ### تشخیص بانک
+
+<div dir="ltr">
 
 ```php
 $card = new CardNumber('6037991234567890');
 $card->bankName(); // "ملی" (یا null اگر BIN ناشناخته باشد)
 ```
 
+</div>
+
 تشخیص بانک از ۶ رقم اول (BIN) برای شناسایی بانک صادرکننده استفاده می‌کند.
 
 ### مقایسه
+
+<div dir="ltr">
 
 ```php
 $a = new CardNumber('6037991234567890');
 $b = new CardNumber('6037-9912-3456-7890');
 $a->equals($b); // true
 ```
+
+</div>
 
 ## Sheba (شبا)
 
@@ -60,6 +76,8 @@ $a->equals($b); // true
 فرمت شبای ایرانی: `IR` + ۲ رقم کنترلی + ۲۲ رقم = مجموعاً ۲۶ کاراکتر.
 
 ### ساخت و اعتبارسنجی
+
+<div dir="ltr">
 
 ```php
 use Eram\Pardakht\Banking\Sheba;
@@ -72,11 +90,15 @@ $sheba = new Sheba('062960000000100324200001'); // IR خودکار اضافه م
 Sheba::isValid('IR062960000000100324200001'); // true
 ```
 
+</div>
+
 ساخت در صورت زیر `\InvalidArgumentException` پرتاب می‌کند:
 - فرمت IR + ۲۴ رقم نباشد
 - چک‌سام mod-97 طبق ISO 13616 ناموفق باشد
 
 ### خواندن مقادیر
+
+<div dir="ltr">
 
 ```php
 $sheba = new Sheba('IR062960000000100324200001');
@@ -85,21 +107,33 @@ $sheba->value();  // "IR062960000000100324200001"
 $sheba->digits(); // "062960000000100324200001" (بدون پیشوند IR)
 ```
 
+</div>
+
 ### فرمت‌بندی
+
+<div dir="ltr">
 
 ```php
 $sheba->formatted(); // "IR06 2960 0000 0010 0324 2000 01"
 ```
 
+</div>
+
 ### تشخیص بانک
+
+<div dir="ltr">
 
 ```php
 $sheba->bankName(); // "ملت" (یا null اگر کد بانک ناشناخته باشد)
 ```
 
+</div>
+
 تشخیص بانک از کد بانک موجود در شبا (ارقام ۵ تا ۷ بعد از IR) استفاده می‌کند.
 
 ### مقایسه
+
+<div dir="ltr">
 
 ```php
 $a = new Sheba('IR062960000000100324200001');
@@ -107,9 +141,13 @@ $b = new Sheba('062960000000100324200001');
 $a->equals($b); // true
 ```
 
+</div>
+
 ## BankIdentifier
 
 کلاس `BankIdentifier` متدهای استاتیک برای تشخیص بانک بدون ساخت آبجکت مقداری فراهم می‌کند:
+
+<div dir="ltr">
 
 ```php
 use Eram\Pardakht\Banking\BankIdentifier;
@@ -117,6 +155,8 @@ use Eram\Pardakht\Banking\BankIdentifier;
 BankIdentifier::fromCardNumber('6037991234567890');     // "ملی"
 BankIdentifier::fromSheba('IR062960000000100324200001'); // "ملت"
 ```
+
+</div>
 
 هر دو متد `?string` برمی‌گردانند — اگر کد بانک در پایگاه داده نباشد `null` برمی‌گردد.
 

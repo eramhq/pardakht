@@ -6,6 +6,8 @@
 
 ## پیکربندی
 
+<div dir="ltr">
+
 ```php
 use Eram\Pardakht\Gateway\Parsian\ParsianConfig;
 
@@ -14,11 +16,15 @@ $config = new ParsianConfig(
 );
 ```
 
+</div>
+
 | پارامتر | نوع | الزامی | توضیحات |
 |-----------|------|----------|-------------|
 | `pin` | `string` | بله | کد پین از بانک پارسیان |
 
 ## خرید
+
+<div dir="ltr">
 
 ```php
 $gateway = $pardakht->create('parsian', $config);
@@ -33,15 +39,23 @@ $response = $gateway->purchase(new PurchaseRequest(
 echo $response->renderAutoSubmitForm();
 ```
 
+</div>
+
 ## تایید
+
+<div dir="ltr">
 
 ```php
 $transaction = $gateway->verify();
 ```
 
+</div>
+
 ## تسویه (الزامی)
 
 پارسیان پس از تایید نیاز به تسویه دارد. پرداخت‌های تسویه‌نشده به‌طور خودکار برگشت می‌خورند.
+
+<div dir="ltr">
 
 ```php
 use Eram\Pardakht\Contracts\SupportsSettlement;
@@ -50,6 +64,8 @@ if ($gateway instanceof SupportsSettlement) {
     $transaction = $gateway->settle($transaction);
 }
 ```
+
+</div>
 
 ## نکات
 

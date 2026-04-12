@@ -6,6 +6,8 @@
 
 ## پرداخت ساده با مدیریت خطا
 
+<div dir="ltr">
+
 ```php
 use Eram\Pardakht\Pardakht;
 use Eram\Pardakht\Gateway\Zarinpal\ZarinpalConfig;
@@ -43,7 +45,11 @@ try {
 }
 ```
 
+</div>
+
 ## هندلر کالبک تایید
+
+<div dir="ltr">
 
 ```php
 use Eram\Pardakht\Contracts\SupportsSettlement;
@@ -77,7 +83,11 @@ try {
 }
 ```
 
+</div>
+
 ## تعویض درگاه از طریق تنظیمات
+
+<div dir="ltr">
 
 ```php
 // ذخیره تنظیمات درگاه در پیکربندی اپلیکیشن
@@ -92,7 +102,11 @@ $activeGateway = 'zarinpal'; // این را تغییر دهید
 $gateway = $pardakht->create($activeGateway, $gatewayConfigs[$activeGateway]);
 ```
 
+</div>
+
 ## مدیریت هر دو نوع ریدایرکت
+
+<div dir="ltr">
 
 ```php
 $response = $gateway->purchase($request);
@@ -107,7 +121,11 @@ if ($response->isPost()) {
 }
 ```
 
+</div>
+
 ## کلاینت HTTP سفارشی (مثال Guzzle)
+
+<div dir="ltr">
 
 ```php
 use Eram\Pardakht\Http\HttpClient;
@@ -151,7 +169,11 @@ class GuzzleHttpClient implements HttpClient
 $pardakht = new Pardakht(httpClient: new GuzzleHttpClient());
 ```
 
+</div>
+
 ## لاگ کردن تمام درخواست‌ها
+
+<div dir="ltr">
 
 ```php
 use Eram\Pardakht\Http\Logger;
@@ -173,7 +195,11 @@ class FileLogger implements Logger
 $pardakht = new Pardakht(logger: new FileLogger());
 ```
 
+</div>
+
 ## شنونده‌های رویداد
+
+<div dir="ltr">
 
 ```php
 use Eram\Pardakht\Http\EventDispatcher;
@@ -214,7 +240,11 @@ class PaymentEventDispatcher implements EventDispatcher
 $pardakht = new Pardakht(eventDispatcher: new PaymentEventDispatcher());
 ```
 
+</div>
+
 ## اعتبارسنجی شماره کارت و شبا
+
+<div dir="ltr">
 
 ```php
 use Eram\Pardakht\Banking\CardNumber;
@@ -234,5 +264,7 @@ $sheba = new Sheba('IR062960000000100324200001');
 echo $sheba->bankName();   // "ملت"
 echo $sheba->formatted();  // "IR06 2960 0000 0010 0324 2000 01"
 ```
+
+</div>
 
 </div>

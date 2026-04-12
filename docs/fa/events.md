@@ -8,6 +8,8 @@
 
 اینترفیس `EventDispatcher` را پیاده‌سازی کنید و به `Pardakht` ارسال کنید:
 
+<div dir="ltr">
+
 ```php
 use Eram\Pardakht\Http\EventDispatcher;
 
@@ -23,11 +25,15 @@ class MyEventDispatcher implements EventDispatcher
 $pardakht = new Pardakht(eventDispatcher: new MyEventDispatcher());
 ```
 
+</div>
+
 ## انواع رویداد
 
 ### PurchaseInitiated
 
 هنگام فراخوانی `purchase()` و قبل از ارسال درخواست به درگاه ارسال می‌شود.
+
+<div dir="ltr">
 
 ```php
 use Eram\Pardakht\Event\PurchaseInitiated;
@@ -37,9 +43,13 @@ $event->gatewayName; // string — مثلاً "zarinpal"
 $event->request;     // PurchaseRequest
 ```
 
+</div>
+
 ### CallbackReceived
 
 هنگام فراخوانی `verify()` و قبل از شروع تایید ارسال می‌شود.
+
+<div dir="ltr">
 
 ```php
 use Eram\Pardakht\Event\CallbackReceived;
@@ -49,9 +59,13 @@ $event->gatewayName;  // string
 $event->callbackData; // array<string, mixed>
 ```
 
+</div>
+
 ### PaymentVerified
 
 پس از تایید موفق پرداخت ارسال می‌شود.
+
+<div dir="ltr">
 
 ```php
 use Eram\Pardakht\Event\PaymentVerified;
@@ -61,9 +75,13 @@ $event->gatewayName; // string
 $event->transaction; // TransactionInterface
 ```
 
+</div>
+
 ### PaymentSettled
 
 پس از تسویه موفق (ملت، پارسیان) ارسال می‌شود.
+
+<div dir="ltr">
 
 ```php
 use Eram\Pardakht\Event\PaymentSettled;
@@ -73,9 +91,13 @@ $event->gatewayName; // string
 $event->transaction; // TransactionInterface
 ```
 
+</div>
+
 ### PaymentFailed
 
 هنگام ناموفق بودن عملیات درگاه ارسال می‌شود.
+
+<div dir="ltr">
 
 ```php
 use Eram\Pardakht\Event\PaymentFailed;
@@ -86,7 +108,11 @@ $event->reason;      // string — پیام خطای قابل خواندن
 $event->errorCode;   // int|string — کد خطای مخصوص درگاه (پیش‌فرض: 0)
 ```
 
+</div>
+
 ## جریان رویدادها
+
+<div dir="ltr">
 
 ```
 purchase() ──→ PurchaseInitiated ──→ [درخواست درگاه] ──→ ریدایرکت
@@ -107,6 +133,8 @@ settle() ──→ [درخواست تسویه]
               │             │
        PaymentSettled  PaymentFailed
 ```
+
+</div>
 
 ## موارد استفاده
 

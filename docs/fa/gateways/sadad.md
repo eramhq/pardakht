@@ -6,6 +6,8 @@
 
 ## پیکربندی
 
+<div dir="ltr">
+
 ```php
 use Eram\Pardakht\Gateway\Sadad\SadadConfig;
 
@@ -16,6 +18,8 @@ $config = new SadadConfig(
 );
 ```
 
+</div>
+
 | پارامتر | نوع | الزامی | توضیحات |
 |-----------|------|----------|-------------|
 | `merchantId` | `string` | بله | شناسه مرچنت |
@@ -23,6 +27,8 @@ $config = new SadadConfig(
 | `terminalKey` | `string` | بله | کلید رمزنگاری ترمینال |
 
 ## خرید
+
+<div dir="ltr">
 
 ```php
 $gateway = $pardakht->create('sadad', $config);
@@ -36,11 +42,17 @@ $response = $gateway->purchase(new PurchaseRequest(
 header('Location: ' . $response->getUrl());
 ```
 
+</div>
+
 ## تایید
+
+<div dir="ltr">
 
 ```php
 $transaction = $gateway->verify();
 ```
+
+</div>
 
 ## تسویه
 

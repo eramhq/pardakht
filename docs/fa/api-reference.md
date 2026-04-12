@@ -6,6 +6,8 @@
 
 ## Pardakht (نقطه ورود)
 
+<div dir="ltr">
+
 ```php
 namespace Eram\Pardakht;
 
@@ -25,9 +27,13 @@ final class Pardakht
 }
 ```
 
+</div>
+
 ## قراردادها
 
 ### GatewayInterface
+
+<div dir="ltr">
 
 ```php
 namespace Eram\Pardakht\Contracts;
@@ -42,7 +48,11 @@ interface GatewayInterface
 }
 ```
 
+</div>
+
 ### TransactionInterface
+
+<div dir="ltr">
 
 ```php
 namespace Eram\Pardakht\Contracts;
@@ -64,7 +74,11 @@ interface TransactionInterface
 }
 ```
 
+</div>
+
 ### SupportsSettlement
+
+<div dir="ltr">
 
 ```php
 namespace Eram\Pardakht\Contracts;
@@ -75,9 +89,13 @@ interface SupportsSettlement
 }
 ```
 
+</div>
+
 پیاده‌سازی شده توسط: ملت، پارسیان.
 
 ### SupportsRefund
+
+<div dir="ltr">
 
 ```php
 namespace Eram\Pardakht\Contracts;
@@ -88,9 +106,13 @@ interface SupportsRefund
 }
 ```
 
+</div>
+
 ## پول
 
 ### Amount
+
+<div dir="ltr">
 
 ```php
 namespace Eram\Pardakht\Money;
@@ -115,7 +137,11 @@ final class Amount
 }
 ```
 
+</div>
+
 ### Currency
+
+<div dir="ltr">
 
 ```php
 namespace Eram\Pardakht\Money;
@@ -129,9 +155,13 @@ enum Currency: string
 }
 ```
 
+</div>
+
 ## تراکنش
 
 ### Transaction
+
+<div dir="ltr">
 
 ```php
 namespace Eram\Pardakht\Transaction;
@@ -156,7 +186,11 @@ final class Transaction implements TransactionInterface
 }
 ```
 
+</div>
+
 ### TransactionId
+
+<div dir="ltr">
 
 ```php
 namespace Eram\Pardakht\Transaction;
@@ -171,7 +205,11 @@ final class TransactionId
 }
 ```
 
+</div>
+
 ### TransactionStatus
+
+<div dir="ltr">
 
 ```php
 namespace Eram\Pardakht\Transaction;
@@ -189,6 +227,8 @@ enum TransactionStatus: string
 }
 ```
 
+</div>
+
 برچسب‌ها بر اساس زبان:
 
 | وضعیت | `'fa'` | `'en'` |
@@ -203,6 +243,8 @@ enum TransactionStatus: string
 ## HTTP
 
 ### PurchaseRequest
+
+<div dir="ltr">
 
 ```php
 namespace Eram\Pardakht\Http;
@@ -232,7 +274,11 @@ final class PurchaseRequest
 }
 ```
 
+</div>
+
 ### RedirectResponse
+
+<div dir="ltr">
 
 ```php
 namespace Eram\Pardakht\Http;
@@ -256,7 +302,11 @@ final class RedirectResponse
 }
 ```
 
+</div>
+
 ### HttpClient
+
+<div dir="ltr">
 
 ```php
 namespace Eram\Pardakht\Http;
@@ -268,7 +318,11 @@ interface HttpClient
 }
 ```
 
+</div>
+
 ### HttpResponse
+
+<div dir="ltr">
 
 ```php
 namespace Eram\Pardakht\Http;
@@ -284,7 +338,11 @@ final class HttpResponse
 }
 ```
 
+</div>
+
 ### Logger
+
+<div dir="ltr">
 
 ```php
 namespace Eram\Pardakht\Http;
@@ -296,7 +354,11 @@ interface Logger
 }
 ```
 
+</div>
+
 ### EventDispatcher
+
+<div dir="ltr">
 
 ```php
 namespace Eram\Pardakht\Http;
@@ -307,9 +369,13 @@ interface EventDispatcher
 }
 ```
 
+</div>
+
 ## بانکداری
 
 ### CardNumber
+
+<div dir="ltr">
 
 ```php
 namespace Eram\Pardakht\Banking;
@@ -329,7 +395,11 @@ final class CardNumber
 }
 ```
 
+</div>
+
 ### Sheba
+
+<div dir="ltr">
 
 ```php
 namespace Eram\Pardakht\Banking;
@@ -349,7 +419,11 @@ final class Sheba
 }
 ```
 
+</div>
+
 ### BankIdentifier
+
+<div dir="ltr">
 
 ```php
 namespace Eram\Pardakht\Banking;
@@ -360,6 +434,8 @@ final class BankIdentifier
     public static function fromSheba(string $sheba): ?string;
 }
 ```
+
+</div>
 
 ## رویدادها
 

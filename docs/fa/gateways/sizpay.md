@@ -6,6 +6,8 @@
 
 ## پیکربندی
 
+<div dir="ltr">
+
 ```php
 use Eram\Pardakht\Gateway\Sizpay\SizpayConfig;
 
@@ -18,6 +20,8 @@ $config = new SizpayConfig(
 );
 ```
 
+</div>
+
 | پارامتر | نوع | الزامی | توضیحات |
 |-----------|------|----------|-------------|
 | `merchantId` | `string` | بله | شناسه مرچنت |
@@ -27,6 +31,8 @@ $config = new SizpayConfig(
 | `signKey` | `string` | بله | کلید امضای درخواست |
 
 ## خرید
+
+<div dir="ltr">
 
 ```php
 $gateway = $pardakht->create('sizpay', $config);
@@ -40,11 +46,17 @@ $response = $gateway->purchase(new PurchaseRequest(
 header('Location: ' . $response->getUrl());
 ```
 
+</div>
+
 ## تایید
+
+<div dir="ltr">
 
 ```php
 $transaction = $gateway->verify();
 ```
+
+</div>
 
 ## تسویه
 

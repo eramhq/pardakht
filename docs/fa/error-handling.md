@@ -4,6 +4,8 @@
 
 ## سلسله‌مراتب استثناها
 
+<div dir="ltr">
+
 ```
 RuntimeException
 └── PardakhtException (abstract)
@@ -13,6 +15,8 @@ RuntimeException
         └── VerificationException
 ```
 
+</div>
+
 تمام استثناهای پرداخت از `PardakhtException` ارث‌بری دارند، بنابراین در صورت نیاز می‌توانید همه را با یک بلاک catch بگیرید.
 
 ## انواع استثنا
@@ -20,6 +24,8 @@ RuntimeException
 ### PardakhtException
 
 کلاس پایه انتزاعی برای تمام استثناهای کتابخانه. از `\RuntimeException` ارث‌بری دارد.
+
+<div dir="ltr">
 
 ```php
 use Eram\Pardakht\Exception\PardakhtException;
@@ -31,9 +37,13 @@ try {
 }
 ```
 
+</div>
+
 ### InvalidAmountException
 
 هنگام ارائه مبلغ نامعتبر (مثلاً مبالغ منفی) پرتاب می‌شود.
+
+<div dir="ltr">
 
 ```php
 use Eram\Pardakht\Exception\InvalidAmountException;
@@ -41,9 +51,13 @@ use Eram\Pardakht\Exception\InvalidAmountException;
 Amount::fromRials(-100); // InvalidAmountException پرتاب می‌کند
 ```
 
+</div>
+
 ### ConnectionException
 
 هنگام خطاهای سطح انتقال پرتاب می‌شود: DNS resolution، تایم‌اوت TCP، خطاهای TLS و غیره. این یعنی درگاه در دسترس نبود — پرداخت هرگز انجام نشد.
+
+<div dir="ltr">
 
 ```php
 use Eram\Pardakht\Exception\ConnectionException;
@@ -55,9 +69,13 @@ try {
 }
 ```
 
+</div>
+
 ### GatewayException
 
 هنگامی که درگاه با خطا پاسخ می‌دهد پرتاب می‌شود. نام درگاه و کد خطای مخصوص درگاه را حمل می‌کند.
+
+<div dir="ltr">
 
 ```php
 use Eram\Pardakht\Exception\GatewayException;
@@ -71,6 +89,8 @@ try {
 }
 ```
 
+</div>
+
 ### VerificationException
 
 هنگام ناموفق بودن تایید پرداخت پرتاب می‌شود. از `GatewayException` ارث‌بری دارد، بنابراین همان متدهای `getGatewayName()` و `getErrorCode()` را دارد.
@@ -80,6 +100,8 @@ try {
 - عدم تطابق مبلغ پرداخت
 - تلاش تکراری برای تایید
 - تایم‌اوت درگاه
+
+<div dir="ltr">
 
 ```php
 use Eram\Pardakht\Exception\VerificationException;
@@ -91,9 +113,13 @@ try {
 }
 ```
 
+</div>
+
 ## ترتیب پیشنهادی catch
 
 استثناها را از خاص‌ترین تا عمومی‌ترین بگیرید:
+
+<div dir="ltr">
 
 ```php
 try {
@@ -110,6 +136,8 @@ try {
     // گیرنده عمومی برای هر خطای پرداخت
 }
 ```
+
+</div>
 
 ## کدهای خطای درگاه
 

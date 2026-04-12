@@ -6,6 +6,8 @@
 
 ## پیکربندی
 
+<div dir="ltr">
+
 ```php
 use Eram\Pardakht\Gateway\NextPay\NextPayConfig;
 
@@ -14,11 +16,15 @@ $config = new NextPayConfig(
 );
 ```
 
+</div>
+
 | پارامتر | نوع | الزامی | توضیحات |
 |-----------|------|----------|-------------|
 | `apiKey` | `string` | بله | کلید API نکست‌پی |
 
 ## خرید
+
+<div dir="ltr">
 
 ```php
 $gateway = $pardakht->create('nextpay', $config);
@@ -32,11 +38,17 @@ $response = $gateway->purchase(new PurchaseRequest(
 header('Location: ' . $response->getUrl());
 ```
 
+</div>
+
 ## تایید
+
+<div dir="ltr">
 
 ```php
 $transaction = $gateway->verify();
 ```
+
+</div>
 
 ## تسویه
 
