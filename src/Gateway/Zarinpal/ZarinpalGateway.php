@@ -12,17 +12,15 @@ use Eram\Pardakht\Event\PurchaseInitiated;
 use Eram\Pardakht\Exception\GatewayException;
 use Eram\Pardakht\Exception\VerificationException;
 use Eram\Pardakht\Gateway\AbstractGateway;
+use Eram\Pardakht\Http\EventDispatcher;
+use Eram\Pardakht\Http\HttpClient;
+use Eram\Pardakht\Http\Logger;
 use Eram\Pardakht\Http\PurchaseRequest;
 use Eram\Pardakht\Http\RedirectResponse;
 use Eram\Pardakht\Money\Amount;
 use Eram\Pardakht\Transaction\Transaction;
 use Eram\Pardakht\Transaction\TransactionId;
 use Eram\Pardakht\Transaction\TransactionStatus;
-use Psr\EventDispatcher\EventDispatcherInterface;
-use Psr\Http\Client\ClientInterface;
-use Psr\Http\Message\RequestFactoryInterface;
-use Psr\Http\Message\StreamFactoryInterface;
-use Psr\Log\LoggerInterface;
 
 /**
  * Zarinpal payment gateway (REST API v4).
@@ -38,13 +36,11 @@ final class ZarinpalGateway extends AbstractGateway
 
     public function __construct(
         private readonly ZarinpalConfig $config,
-        ClientInterface $httpClient,
-        RequestFactoryInterface $requestFactory,
-        StreamFactoryInterface $streamFactory,
-        ?LoggerInterface $logger = null,
-        ?EventDispatcherInterface $eventDispatcher = null,
+        HttpClient $httpClient,
+        ?Logger $logger = null,
+        ?EventDispatcher $eventDispatcher = null,
     ) {
-        parent::__construct($httpClient, $requestFactory, $streamFactory, $logger, $eventDispatcher);
+        parent::__construct($httpClient, $logger, $eventDispatcher);
     }
 
     public function getName(): string
@@ -58,7 +54,7 @@ final class ZarinpalGateway extends AbstractGateway
 
         $apiUrl = $this->getApiUrl();
 
-        $response = $this->postJson("{$apiUrl}/request.json", [
+        $data = $this->postJson("{$apiUrl}/request.json", [
             'merchant_id' => $this->config->merchantId,
             'amount' => $request->getAmount()->inRials(),
             'callback_url' => $request->getCallbackUrl(),
@@ -70,7 +66,6 @@ final class ZarinpalGateway extends AbstractGateway
             ]),
         ]);
 
-        $data = $this->decodeResponse($response);
         $dataSection = $data['data'] ?? [];
         $code = (int) ($dataSection['code'] ?? $data['errors']['code'] ?? -1);
 
@@ -112,13 +107,12 @@ final class ZarinpalGateway extends AbstractGateway
 
         $apiUrl = $this->getApiUrl();
 
-        $response = $this->postJson("{$apiUrl}/verify.json", [
+        $data = $this->postJson("{$apiUrl}/verify.json", [
             'merchant_id' => $this->config->merchantId,
             'authority' => $authority,
             'amount' => (int) ($callbackData['amount'] ?? 0),
         ]);
 
-        $data = $this->decodeResponse($response);
         $dataSection = $data['data'] ?? [];
         $code = (int) ($dataSection['code'] ?? $data['errors']['code'] ?? -1);
 
@@ -141,7 +135,7 @@ final class ZarinpalGateway extends AbstractGateway
             status: TransactionStatus::Verified,
             referenceId: $authority,
             trackingCode: $refId,
-            cardNumber: $cardPan !== '' ? $cardPan : null,
+            cardNumber: $this->nullIfEmpty($cardPan),
             extra: [
                 'fee_type' => $dataSection['fee_type'] ?? '',
                 'fee' => $dataSection['fee'] ?? 0,

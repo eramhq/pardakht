@@ -8,52 +8,37 @@ use Eram\Pardakht\Exception\GatewayException;
 use Eram\Pardakht\Exception\VerificationException;
 use Eram\Pardakht\Gateway\Zarinpal\ZarinpalConfig;
 use Eram\Pardakht\Gateway\Zarinpal\ZarinpalGateway;
+use Eram\Pardakht\Http\HttpClient;
+use Eram\Pardakht\Http\HttpResponse;
 use Eram\Pardakht\Http\PurchaseRequest;
 use Eram\Pardakht\Money\Amount;
 use Eram\Pardakht\Transaction\TransactionStatus;
-use GuzzleHttp\Psr7\HttpFactory;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Psr\Http\Client\ClientInterface;
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
 
 final class ZarinpalGatewayTest extends TestCase
 {
-    private HttpFactory $httpFactory;
-
-    protected function setUp(): void
-    {
-        $this->httpFactory = new HttpFactory();
-    }
-
     #[Test]
     public function purchase_returns_redirect_response(): void
     {
-        $responseBody = \json_encode([
+        $httpClient = $this->createMockHttpClient(200, \json_encode([
             'data' => [
                 'code' => 100,
                 'authority' => 'A00000000000000000000000000217885159',
             ],
-        ]);
-
-        $httpClient = $this->createMockHttpClient(200, $responseBody);
+        ]));
 
         $gateway = new ZarinpalGateway(
             new ZarinpalConfig('test-merchant-id', sandbox: true),
             $httpClient,
-            $this->httpFactory,
-            $this->httpFactory,
         );
 
-        $request = new PurchaseRequest(
+        $response = $gateway->purchase(new PurchaseRequest(
             amount: Amount::fromToman(50_000),
             callbackUrl: 'https://example.com/callback',
             orderId: '12345',
             description: 'Test payment',
-        );
-
-        $response = $gateway->purchase($request);
+        ));
 
         $this->assertStringContainsString('A00000000000000000000000000217885159', $response->getUrl());
         $this->assertSame('A00000000000000000000000000217885159', $response->getReferenceId());
@@ -63,38 +48,32 @@ final class ZarinpalGatewayTest extends TestCase
     #[Test]
     public function purchase_throws_on_error(): void
     {
-        $responseBody = \json_encode([
+        $httpClient = $this->createMockHttpClient(200, \json_encode([
             'data' => [],
             'errors' => [
                 'code' => -1,
                 'message' => 'Invalid merchant ID',
             ],
-        ]);
-
-        $httpClient = $this->createMockHttpClient(200, $responseBody);
+        ]));
 
         $gateway = new ZarinpalGateway(
             new ZarinpalConfig('invalid-merchant'),
             $httpClient,
-            $this->httpFactory,
-            $this->httpFactory,
-        );
-
-        $request = new PurchaseRequest(
-            amount: Amount::fromToman(50_000),
-            callbackUrl: 'https://example.com/callback',
-            orderId: '12345',
         );
 
         $this->expectException(GatewayException::class);
 
-        $gateway->purchase($request);
+        $gateway->purchase(new PurchaseRequest(
+            amount: Amount::fromToman(50_000),
+            callbackUrl: 'https://example.com/callback',
+            orderId: '12345',
+        ));
     }
 
     #[Test]
     public function verify_returns_transaction(): void
     {
-        $responseBody = \json_encode([
+        $httpClient = $this->createMockHttpClient(200, \json_encode([
             'data' => [
                 'code' => 100,
                 'ref_id' => 123456789,
@@ -103,15 +82,11 @@ final class ZarinpalGatewayTest extends TestCase
                 'fee_type' => 'Merchant',
                 'fee' => 0,
             ],
-        ]);
-
-        $httpClient = $this->createMockHttpClient(200, $responseBody);
+        ]));
 
         $gateway = new ZarinpalGateway(
             new ZarinpalConfig('test-merchant-id'),
             $httpClient,
-            $this->httpFactory,
-            $this->httpFactory,
         );
 
         $transaction = $gateway->verify([
@@ -130,13 +105,11 @@ final class ZarinpalGatewayTest extends TestCase
     #[Test]
     public function verify_throws_when_user_cancelled(): void
     {
-        $httpClient = $this->createMock(ClientInterface::class);
+        $httpClient = $this->createMock(HttpClient::class);
 
         $gateway = new ZarinpalGateway(
             new ZarinpalConfig('test-merchant-id'),
             $httpClient,
-            $this->httpFactory,
-            $this->httpFactory,
         );
 
         $this->expectException(VerificationException::class);
@@ -150,27 +123,21 @@ final class ZarinpalGatewayTest extends TestCase
     #[Test]
     public function gateway_name(): void
     {
-        $httpClient = $this->createMock(ClientInterface::class);
+        $httpClient = $this->createMock(HttpClient::class);
 
         $gateway = new ZarinpalGateway(
             new ZarinpalConfig('test'),
             $httpClient,
-            $this->httpFactory,
-            $this->httpFactory,
         );
 
         $this->assertSame('zarinpal', $gateway->getName());
     }
 
-    private function createMockHttpClient(int $statusCode, string $body): ClientInterface
+    private function createMockHttpClient(int $statusCode, string $body): HttpClient
     {
-        $response = $this->httpFactory->createResponse($statusCode)
-            ->withBody($this->httpFactory->createStream($body))
-            ->withHeader('Content-Type', 'application/json');
-
-        $client = $this->createMock(ClientInterface::class);
-        $client->method('sendRequest')
-            ->willReturn($response);
+        $client = $this->createMock(HttpClient::class);
+        $client->method('postJson')
+            ->willReturn(new HttpResponse($statusCode, $body));
 
         return $client;
     }

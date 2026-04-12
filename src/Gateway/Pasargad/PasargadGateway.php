@@ -12,17 +12,15 @@ use Eram\Pardakht\Event\PurchaseInitiated;
 use Eram\Pardakht\Exception\GatewayException;
 use Eram\Pardakht\Exception\VerificationException;
 use Eram\Pardakht\Gateway\AbstractGateway;
+use Eram\Pardakht\Http\EventDispatcher;
+use Eram\Pardakht\Http\HttpClient;
+use Eram\Pardakht\Http\Logger;
 use Eram\Pardakht\Http\PurchaseRequest;
 use Eram\Pardakht\Http\RedirectResponse;
 use Eram\Pardakht\Money\Amount;
 use Eram\Pardakht\Transaction\Transaction;
 use Eram\Pardakht\Transaction\TransactionId;
 use Eram\Pardakht\Transaction\TransactionStatus;
-use Psr\EventDispatcher\EventDispatcherInterface;
-use Psr\Http\Client\ClientInterface;
-use Psr\Http\Message\RequestFactoryInterface;
-use Psr\Http\Message\StreamFactoryInterface;
-use Psr\Log\LoggerInterface;
 
 /**
  * Pasargad Bank payment gateway.
@@ -40,13 +38,11 @@ final class PasargadGateway extends AbstractGateway
 
     public function __construct(
         private readonly PasargadConfig $config,
-        ClientInterface $httpClient,
-        RequestFactoryInterface $requestFactory,
-        StreamFactoryInterface $streamFactory,
-        ?LoggerInterface $logger = null,
-        ?EventDispatcherInterface $eventDispatcher = null,
+        HttpClient $httpClient,
+        ?Logger $logger = null,
+        ?EventDispatcher $eventDispatcher = null,
     ) {
-        parent::__construct($httpClient, $requestFactory, $streamFactory, $logger, $eventDispatcher);
+        parent::__construct($httpClient, $logger, $eventDispatcher);
     }
 
     public function getName(): string
@@ -75,7 +71,7 @@ final class PasargadGateway extends AbstractGateway
 
         $sign = $this->rsaSign($signData);
 
-        $response = $this->postJson(self::TOKEN_URL, [
+        $data = $this->postJson(self::TOKEN_URL, [
             'MerchantCode' => $this->config->merchantCode,
             'TerminalCode' => $this->config->terminalCode,
             'InvoiceNumber' => $invoiceNumber,
@@ -89,7 +85,6 @@ final class PasargadGateway extends AbstractGateway
             'Sign' => $sign,
         ]);
 
-        $data = $this->decodeResponse($response);
         $isSuccess = (bool) ($data['IsSuccess'] ?? false);
 
         if (!$isSuccess) {
@@ -126,7 +121,7 @@ final class PasargadGateway extends AbstractGateway
         $signData = \sprintf('#%s#%s#', $invoiceNumber, $invoiceDate);
         $sign = $this->rsaSign($signData);
 
-        $response = $this->postJson(self::VERIFY_URL, [
+        $data = $this->postJson(self::VERIFY_URL, [
             'MerchantCode' => $this->config->merchantCode,
             'TerminalCode' => $this->config->terminalCode,
             'InvoiceNumber' => $invoiceNumber,
@@ -136,7 +131,6 @@ final class PasargadGateway extends AbstractGateway
             'Sign' => $sign,
         ]);
 
-        $data = $this->decodeResponse($response);
         $isSuccess = (bool) ($data['IsSuccess'] ?? false);
 
         if (!$isSuccess) {
@@ -157,7 +151,7 @@ final class PasargadGateway extends AbstractGateway
             status: TransactionStatus::Verified,
             referenceId: $transactionReferenceId,
             trackingCode: $shaparakRefNumber,
-            cardNumber: $maskedCardNumber !== '' ? $maskedCardNumber : null,
+            cardNumber: $this->nullIfEmpty($maskedCardNumber),
             extra: [
                 'InvoiceDate' => $invoiceDate,
                 'ShaparakRefNumber' => $shaparakRefNumber,

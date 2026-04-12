@@ -119,9 +119,29 @@ $sheba->bankName();  // تشخیص خودکار از کد شبا
 Sheba::isValid('IR062960000000100324200001'); // true
 ```
 
+## کلاینت HTTP سفارشی
+
+پرداخت از `CurlHttpClient` داخلی استفاده می‌کند و **هیچ وابستگی packagist ندارد**. برای استفاده از کلاینت HTTP سفارشی، اینترفیس تک‌متدی `HttpClient` را پیاده‌سازی کنید:
+
+```php
+use Eram\Pardakht\Http\HttpClient;
+use Eram\Pardakht\Http\HttpResponse;
+
+class MyHttpClient implements HttpClient
+{
+    public function postJson(string $url, string $body, array $headers = []): HttpResponse
+    {
+        // پیاده‌سازی شما
+        return new HttpResponse(200, $responseBody);
+    }
+}
+
+$pardakht = new Pardakht(httpClient: new MyHttpClient());
+```
+
 ## رویدادها
 
-با ارسال هر PSR-14 event dispatcher، رویدادهای چرخه حیات پرداخت را دریافت کنید: `PurchaseInitiated`, `CallbackReceived`, `PaymentVerified`, `PaymentSettled`, `PaymentFailed`.
+اینترفیس `Eram\Pardakht\Http\EventDispatcher` را پیاده‌سازی کنید تا رویدادهای چرخه حیات پرداخت را دریافت کنید: `PurchaseInitiated`, `CallbackReceived`, `PaymentVerified`, `PaymentSettled`, `PaymentFailed`.
 
 ```php
 $pardakht = new Pardakht(eventDispatcher: $yourDispatcher);

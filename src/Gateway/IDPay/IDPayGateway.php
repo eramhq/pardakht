@@ -12,17 +12,15 @@ use Eram\Pardakht\Event\PurchaseInitiated;
 use Eram\Pardakht\Exception\GatewayException;
 use Eram\Pardakht\Exception\VerificationException;
 use Eram\Pardakht\Gateway\AbstractGateway;
+use Eram\Pardakht\Http\EventDispatcher;
+use Eram\Pardakht\Http\HttpClient;
+use Eram\Pardakht\Http\Logger;
 use Eram\Pardakht\Http\PurchaseRequest;
 use Eram\Pardakht\Http\RedirectResponse;
 use Eram\Pardakht\Money\Amount;
 use Eram\Pardakht\Transaction\Transaction;
 use Eram\Pardakht\Transaction\TransactionId;
 use Eram\Pardakht\Transaction\TransactionStatus;
-use Psr\EventDispatcher\EventDispatcherInterface;
-use Psr\Http\Client\ClientInterface;
-use Psr\Http\Message\RequestFactoryInterface;
-use Psr\Http\Message\StreamFactoryInterface;
-use Psr\Log\LoggerInterface;
 
 /**
  * IDPay payment gateway (REST API).
@@ -33,13 +31,11 @@ final class IDPayGateway extends AbstractGateway
 
     public function __construct(
         private readonly IDPayConfig $config,
-        ClientInterface $httpClient,
-        RequestFactoryInterface $requestFactory,
-        StreamFactoryInterface $streamFactory,
-        ?LoggerInterface $logger = null,
-        ?EventDispatcherInterface $eventDispatcher = null,
+        HttpClient $httpClient,
+        ?Logger $logger = null,
+        ?EventDispatcher $eventDispatcher = null,
     ) {
-        parent::__construct($httpClient, $requestFactory, $streamFactory, $logger, $eventDispatcher);
+        parent::__construct($httpClient, $logger, $eventDispatcher);
     }
 
     public function getName(): string
@@ -59,7 +55,7 @@ final class IDPayGateway extends AbstractGateway
             $headers['X-SANDBOX'] = '1';
         }
 
-        $response = $this->postJson(self::API_URL, [
+        $data = $this->postJson(self::API_URL, [
             'order_id' => $request->getOrderId(),
             'amount' => $request->getAmount()->inRials(),
             'callback' => $request->getCallbackUrl(),
@@ -68,7 +64,6 @@ final class IDPayGateway extends AbstractGateway
             'mail' => $request->getEmail(),
         ], $headers);
 
-        $data = $this->decodeResponse($response);
 
         if (isset($data['error_code'])) {
             $message = (string) ($data['error_message'] ?? 'Unknown error');
@@ -110,12 +105,11 @@ final class IDPayGateway extends AbstractGateway
             $headers['X-SANDBOX'] = '1';
         }
 
-        $response = $this->postJson(self::API_URL . '/verify', [
+        $data = $this->postJson(self::API_URL . '/verify', [
             'id' => $id,
             'order_id' => $orderId,
         ], $headers);
 
-        $data = $this->decodeResponse($response);
         $verifyStatus = (int) ($data['status'] ?? 0);
 
         if ($verifyStatus !== 100 && $verifyStatus !== 101) {
@@ -138,7 +132,7 @@ final class IDPayGateway extends AbstractGateway
             status: TransactionStatus::Verified,
             referenceId: $id,
             trackingCode: $trackId,
-            cardNumber: $cardNo !== '' ? $cardNo : null,
+            cardNumber: $this->nullIfEmpty($cardNo),
             extra: [
                 'order_id' => $orderId,
                 'track_id' => $trackId,

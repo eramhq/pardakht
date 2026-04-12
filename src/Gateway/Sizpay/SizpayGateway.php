@@ -12,17 +12,15 @@ use Eram\Pardakht\Event\PurchaseInitiated;
 use Eram\Pardakht\Exception\GatewayException;
 use Eram\Pardakht\Exception\VerificationException;
 use Eram\Pardakht\Gateway\AbstractGateway;
+use Eram\Pardakht\Http\EventDispatcher;
+use Eram\Pardakht\Http\HttpClient;
+use Eram\Pardakht\Http\Logger;
 use Eram\Pardakht\Http\PurchaseRequest;
 use Eram\Pardakht\Http\RedirectResponse;
 use Eram\Pardakht\Money\Amount;
 use Eram\Pardakht\Transaction\Transaction;
 use Eram\Pardakht\Transaction\TransactionId;
 use Eram\Pardakht\Transaction\TransactionStatus;
-use Psr\EventDispatcher\EventDispatcherInterface;
-use Psr\Http\Client\ClientInterface;
-use Psr\Http\Message\RequestFactoryInterface;
-use Psr\Http\Message\StreamFactoryInterface;
-use Psr\Log\LoggerInterface;
 
 /**
  * Sizpay payment gateway (REST API).
@@ -35,13 +33,11 @@ final class SizpayGateway extends AbstractGateway
 
     public function __construct(
         private readonly SizpayConfig $config,
-        ClientInterface $httpClient,
-        RequestFactoryInterface $requestFactory,
-        StreamFactoryInterface $streamFactory,
-        ?LoggerInterface $logger = null,
-        ?EventDispatcherInterface $eventDispatcher = null,
+        HttpClient $httpClient,
+        ?Logger $logger = null,
+        ?EventDispatcher $eventDispatcher = null,
     ) {
-        parent::__construct($httpClient, $requestFactory, $streamFactory, $logger, $eventDispatcher);
+        parent::__construct($httpClient, $logger, $eventDispatcher);
     }
 
     public function getName(): string
@@ -61,7 +57,7 @@ final class SizpayGateway extends AbstractGateway
             $this->config->signKey,
         ]));
 
-        $response = $this->postJson(self::TOKEN_URL, [
+        $data = $this->postJson(self::TOKEN_URL, [
             'MerchantID' => $this->config->merchantId,
             'TerminalID' => $this->config->terminalId,
             'UserName' => $this->config->username,
@@ -75,7 +71,6 @@ final class SizpayGateway extends AbstractGateway
             'SignData' => $signData,
         ]);
 
-        $data = $this->decodeResponse($response);
         $resCode = (int) ($data['ResCod'] ?? -1);
 
         if ($resCode !== 0) {
@@ -123,7 +118,7 @@ final class SizpayGateway extends AbstractGateway
             $this->config->signKey,
         ]));
 
-        $response = $this->postJson(self::VERIFY_URL, [
+        $data = $this->postJson(self::VERIFY_URL, [
             'MerchantID' => $this->config->merchantId,
             'TerminalID' => $this->config->terminalId,
             'UserName' => $this->config->username,
@@ -132,7 +127,6 @@ final class SizpayGateway extends AbstractGateway
             'SignData' => $signData,
         ]);
 
-        $data = $this->decodeResponse($response);
         $verifyResCode = (int) ($data['ResCod'] ?? -1);
 
         if ($verifyResCode !== 0) {
@@ -150,7 +144,7 @@ final class SizpayGateway extends AbstractGateway
             status: TransactionStatus::Verified,
             referenceId: $token,
             trackingCode: $refNo,
-            cardNumber: $cardNo !== '' ? $cardNo : null,
+            cardNumber: $this->nullIfEmpty($cardNo),
             extra: [
                 'RefNo' => $refNo,
                 'TraceNo' => $data['TraceNo'] ?? '',

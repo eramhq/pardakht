@@ -12,17 +12,15 @@ use Eram\Pardakht\Event\PurchaseInitiated;
 use Eram\Pardakht\Exception\GatewayException;
 use Eram\Pardakht\Exception\VerificationException;
 use Eram\Pardakht\Gateway\AbstractGateway;
+use Eram\Pardakht\Http\EventDispatcher;
+use Eram\Pardakht\Http\HttpClient;
+use Eram\Pardakht\Http\Logger;
 use Eram\Pardakht\Http\PurchaseRequest;
 use Eram\Pardakht\Http\RedirectResponse;
 use Eram\Pardakht\Money\Amount;
 use Eram\Pardakht\Transaction\Transaction;
 use Eram\Pardakht\Transaction\TransactionId;
 use Eram\Pardakht\Transaction\TransactionStatus;
-use Psr\EventDispatcher\EventDispatcherInterface;
-use Psr\Http\Client\ClientInterface;
-use Psr\Http\Message\RequestFactoryInterface;
-use Psr\Http\Message\StreamFactoryInterface;
-use Psr\Log\LoggerInterface;
 
 /**
  * Sadad (Bank Melli) payment gateway.
@@ -38,13 +36,11 @@ final class SadadGateway extends AbstractGateway
 
     public function __construct(
         private readonly SadadConfig $config,
-        ClientInterface $httpClient,
-        RequestFactoryInterface $requestFactory,
-        StreamFactoryInterface $streamFactory,
-        ?LoggerInterface $logger = null,
-        ?EventDispatcherInterface $eventDispatcher = null,
+        HttpClient $httpClient,
+        ?Logger $logger = null,
+        ?EventDispatcher $eventDispatcher = null,
     ) {
-        parent::__construct($httpClient, $requestFactory, $streamFactory, $logger, $eventDispatcher);
+        parent::__construct($httpClient, $logger, $eventDispatcher);
     }
 
     public function getName(): string
@@ -62,7 +58,7 @@ final class SadadGateway extends AbstractGateway
 
         $signData = $this->sign("{$this->config->terminalId};{$orderId};{$amount}");
 
-        $response = $this->postJson(self::REQUEST_URL, [
+        $data = $this->postJson(self::REQUEST_URL, [
             'MerchantId' => $this->config->merchantId,
             'TerminalId' => $this->config->terminalId,
             'Amount' => $amount,
@@ -73,7 +69,6 @@ final class SadadGateway extends AbstractGateway
             'AdditionalData' => $request->getDescription(),
         ]);
 
-        $data = $this->decodeResponse($response);
         $resCode = (int) ($data['ResCode'] ?? -1);
 
         if ($resCode !== 0) {
@@ -114,12 +109,11 @@ final class SadadGateway extends AbstractGateway
 
         $signData = $this->sign($token);
 
-        $response = $this->postJson(self::VERIFY_URL, [
+        $data = $this->postJson(self::VERIFY_URL, [
             'Token' => $token,
             'SignData' => $signData,
         ]);
 
-        $data = $this->decodeResponse($response);
         $resultCode = (int) ($data['ResCode'] ?? -1);
 
         if ($resultCode !== 0) {

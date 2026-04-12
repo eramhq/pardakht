@@ -12,6 +12,8 @@ use Eram\Pardakht\Event\PurchaseInitiated;
 use Eram\Pardakht\Exception\GatewayException;
 use Eram\Pardakht\Exception\VerificationException;
 use Eram\Pardakht\Gateway\AbstractSoapGateway;
+use Eram\Pardakht\Http\EventDispatcher;
+use Eram\Pardakht\Http\Logger;
 use Eram\Pardakht\Http\PurchaseRequest;
 use Eram\Pardakht\Http\RedirectResponse;
 use Eram\Pardakht\Http\SoapClientFactory;
@@ -19,8 +21,6 @@ use Eram\Pardakht\Money\Amount;
 use Eram\Pardakht\Transaction\Transaction;
 use Eram\Pardakht\Transaction\TransactionId;
 use Eram\Pardakht\Transaction\TransactionStatus;
-use Psr\EventDispatcher\EventDispatcherInterface;
-use Psr\Log\LoggerInterface;
 
 /**
  * Saman Bank (Sep) payment gateway.
@@ -35,8 +35,8 @@ final class SamanGateway extends AbstractSoapGateway
     public function __construct(
         private readonly SamanConfig $config,
         ?SoapClientFactory $soapFactory = null,
-        ?LoggerInterface $logger = null,
-        ?EventDispatcherInterface $eventDispatcher = null,
+        ?Logger $logger = null,
+        ?EventDispatcher $eventDispatcher = null,
     ) {
         parent::__construct($soapFactory, $logger, $eventDispatcher);
     }
@@ -107,7 +107,7 @@ final class SamanGateway extends AbstractSoapGateway
             status: TransactionStatus::Verified,
             referenceId: $refNum,
             trackingCode: $traceNo,
-            cardNumber: $securePan !== '' ? $securePan : null,
+            cardNumber: $this->nullIfEmpty($securePan),
         );
 
         $this->dispatch(new PaymentVerified($this->getName(), $transaction));

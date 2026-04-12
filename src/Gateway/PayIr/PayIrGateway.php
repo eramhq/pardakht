@@ -12,17 +12,15 @@ use Eram\Pardakht\Event\PurchaseInitiated;
 use Eram\Pardakht\Exception\GatewayException;
 use Eram\Pardakht\Exception\VerificationException;
 use Eram\Pardakht\Gateway\AbstractGateway;
+use Eram\Pardakht\Http\EventDispatcher;
+use Eram\Pardakht\Http\HttpClient;
+use Eram\Pardakht\Http\Logger;
 use Eram\Pardakht\Http\PurchaseRequest;
 use Eram\Pardakht\Http\RedirectResponse;
 use Eram\Pardakht\Money\Amount;
 use Eram\Pardakht\Transaction\Transaction;
 use Eram\Pardakht\Transaction\TransactionId;
 use Eram\Pardakht\Transaction\TransactionStatus;
-use Psr\EventDispatcher\EventDispatcherInterface;
-use Psr\Http\Client\ClientInterface;
-use Psr\Http\Message\RequestFactoryInterface;
-use Psr\Http\Message\StreamFactoryInterface;
-use Psr\Log\LoggerInterface;
 
 /**
  * Pay.ir payment gateway (REST API).
@@ -34,13 +32,11 @@ final class PayIrGateway extends AbstractGateway
 
     public function __construct(
         private readonly PayIrConfig $config,
-        ClientInterface $httpClient,
-        RequestFactoryInterface $requestFactory,
-        StreamFactoryInterface $streamFactory,
-        ?LoggerInterface $logger = null,
-        ?EventDispatcherInterface $eventDispatcher = null,
+        HttpClient $httpClient,
+        ?Logger $logger = null,
+        ?EventDispatcher $eventDispatcher = null,
     ) {
-        parent::__construct($httpClient, $requestFactory, $streamFactory, $logger, $eventDispatcher);
+        parent::__construct($httpClient, $logger, $eventDispatcher);
     }
 
     public function getName(): string
@@ -52,7 +48,7 @@ final class PayIrGateway extends AbstractGateway
     {
         $this->dispatch(new PurchaseInitiated($this->getName(), $request));
 
-        $response = $this->postJson(self::API_URL . '/send', [
+        $data = $this->postJson(self::API_URL . '/send', [
             'api' => $this->config->apiKey,
             'amount' => $request->getAmount()->inRials(),
             'redirect' => $request->getCallbackUrl(),
@@ -61,7 +57,6 @@ final class PayIrGateway extends AbstractGateway
             'factorNumber' => $request->getOrderId(),
         ]);
 
-        $data = $this->decodeResponse($response);
         $status = (int) ($data['status'] ?? 0);
 
         if ($status !== 1) {
@@ -94,12 +89,11 @@ final class PayIrGateway extends AbstractGateway
             throw new VerificationException('Payment was not successful', $this->getName(), $status);
         }
 
-        $response = $this->postJson(self::API_URL . '/verify', [
+        $data = $this->postJson(self::API_URL . '/verify', [
             'api' => $this->config->apiKey,
             'token' => $token,
         ]);
 
-        $data = $this->decodeResponse($response);
         $verifyStatus = (int) ($data['status'] ?? 0);
 
         if ($verifyStatus !== 1) {
@@ -120,7 +114,7 @@ final class PayIrGateway extends AbstractGateway
             status: TransactionStatus::Verified,
             referenceId: $token,
             trackingCode: $transId,
-            cardNumber: $cardNumber !== '' ? $cardNumber : null,
+            cardNumber: $this->nullIfEmpty($cardNumber),
             extra: [
                 'factorNumber' => $data['factorNumber'] ?? '',
             ],

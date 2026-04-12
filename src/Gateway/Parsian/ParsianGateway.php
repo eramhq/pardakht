@@ -14,6 +14,8 @@ use Eram\Pardakht\Event\PurchaseInitiated;
 use Eram\Pardakht\Exception\GatewayException;
 use Eram\Pardakht\Exception\VerificationException;
 use Eram\Pardakht\Gateway\AbstractSoapGateway;
+use Eram\Pardakht\Http\EventDispatcher;
+use Eram\Pardakht\Http\Logger;
 use Eram\Pardakht\Http\PurchaseRequest;
 use Eram\Pardakht\Http\RedirectResponse;
 use Eram\Pardakht\Http\SoapClientFactory;
@@ -21,8 +23,6 @@ use Eram\Pardakht\Money\Amount;
 use Eram\Pardakht\Transaction\Transaction;
 use Eram\Pardakht\Transaction\TransactionId;
 use Eram\Pardakht\Transaction\TransactionStatus;
-use Psr\EventDispatcher\EventDispatcherInterface;
-use Psr\Log\LoggerInterface;
 
 /**
  * Parsian Bank (Pec) payment gateway.
@@ -40,8 +40,8 @@ final class ParsianGateway extends AbstractSoapGateway implements SupportsSettle
     public function __construct(
         private readonly ParsianConfig $config,
         ?SoapClientFactory $soapFactory = null,
-        ?LoggerInterface $logger = null,
-        ?EventDispatcherInterface $eventDispatcher = null,
+        ?Logger $logger = null,
+        ?EventDispatcher $eventDispatcher = null,
     ) {
         parent::__construct($soapFactory, $logger, $eventDispatcher);
     }
@@ -111,7 +111,7 @@ final class ParsianGateway extends AbstractSoapGateway implements SupportsSettle
             status: TransactionStatus::Verified,
             referenceId: $token,
             trackingCode: $rrn,
-            cardNumber: $cardNumber !== '' ? $cardNumber : null,
+            cardNumber: $this->nullIfEmpty($cardNumber),
             extra: ['Token' => $token, 'RRN' => $rrn],
         );
 

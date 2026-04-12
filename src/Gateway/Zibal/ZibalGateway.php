@@ -12,17 +12,15 @@ use Eram\Pardakht\Event\PurchaseInitiated;
 use Eram\Pardakht\Exception\GatewayException;
 use Eram\Pardakht\Exception\VerificationException;
 use Eram\Pardakht\Gateway\AbstractGateway;
+use Eram\Pardakht\Http\EventDispatcher;
+use Eram\Pardakht\Http\HttpClient;
+use Eram\Pardakht\Http\Logger;
 use Eram\Pardakht\Http\PurchaseRequest;
 use Eram\Pardakht\Http\RedirectResponse;
 use Eram\Pardakht\Money\Amount;
 use Eram\Pardakht\Transaction\Transaction;
 use Eram\Pardakht\Transaction\TransactionId;
 use Eram\Pardakht\Transaction\TransactionStatus;
-use Psr\EventDispatcher\EventDispatcherInterface;
-use Psr\Http\Client\ClientInterface;
-use Psr\Http\Message\RequestFactoryInterface;
-use Psr\Http\Message\StreamFactoryInterface;
-use Psr\Log\LoggerInterface;
 
 /**
  * Zibal payment gateway (REST API).
@@ -34,13 +32,11 @@ final class ZibalGateway extends AbstractGateway
 
     public function __construct(
         private readonly ZibalConfig $config,
-        ClientInterface $httpClient,
-        RequestFactoryInterface $requestFactory,
-        StreamFactoryInterface $streamFactory,
-        ?LoggerInterface $logger = null,
-        ?EventDispatcherInterface $eventDispatcher = null,
+        HttpClient $httpClient,
+        ?Logger $logger = null,
+        ?EventDispatcher $eventDispatcher = null,
     ) {
-        parent::__construct($httpClient, $requestFactory, $streamFactory, $logger, $eventDispatcher);
+        parent::__construct($httpClient, $logger, $eventDispatcher);
     }
 
     public function getName(): string
@@ -52,7 +48,7 @@ final class ZibalGateway extends AbstractGateway
     {
         $this->dispatch(new PurchaseInitiated($this->getName(), $request));
 
-        $response = $this->postJson(self::API_URL . '/request', [
+        $data = $this->postJson(self::API_URL . '/request', [
             'merchant' => $this->config->merchant,
             'amount' => $request->getAmount()->inRials(),
             'callbackUrl' => $request->getCallbackUrl(),
@@ -61,7 +57,6 @@ final class ZibalGateway extends AbstractGateway
             'mobile' => $request->getMobile(),
         ]);
 
-        $data = $this->decodeResponse($response);
         $result = (int) ($data['result'] ?? -1);
 
         if ($result !== 100) {
@@ -98,12 +93,11 @@ final class ZibalGateway extends AbstractGateway
             throw new VerificationException($message, $this->getName(), $status);
         }
 
-        $response = $this->postJson(self::API_URL . '/verify', [
+        $data = $this->postJson(self::API_URL . '/verify', [
             'merchant' => $this->config->merchant,
             'trackId' => $trackId,
         ]);
 
-        $data = $this->decodeResponse($response);
         $result = (int) ($data['result'] ?? -1);
 
         if ($result !== 100) {
@@ -124,7 +118,7 @@ final class ZibalGateway extends AbstractGateway
             status: TransactionStatus::Verified,
             referenceId: $trackId,
             trackingCode: $refNumber,
-            cardNumber: $cardNumber !== '' ? $cardNumber : null,
+            cardNumber: $this->nullIfEmpty($cardNumber),
             extra: [
                 'orderId' => $orderId,
                 'paidAt' => $data['paidAt'] ?? '',

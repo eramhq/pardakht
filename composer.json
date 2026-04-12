@@ -1,6 +1,6 @@
 {
     "name": "eram/pardakht",
-    "description": "A simple, type-safe PHP library for Iranian payment gateways",
+    "description": "A simple, type-safe PHP library for Iranian payment gateways. Zero packagist dependencies.",
     "type": "library",
     "license": "MIT",
     "keywords": [
@@ -26,19 +26,13 @@
     "homepage": "https://github.com/eramhq/pardakht",
     "require": {
         "php": "^8.1",
+        "ext-curl": "*",
         "ext-json": "*",
-        "ext-soap": "*",
-        "guzzlehttp/guzzle": "^7.0",
-        "guzzlehttp/psr7": "^2.0",
-        "psr/event-dispatcher": "^1.0",
-        "psr/http-client": "^1.0",
-        "psr/http-factory": "^1.0",
-        "psr/http-message": "^1.1 || ^2.0",
-        "psr/log": "^2.0 || ^3.0"
+        "ext-openssl": "*",
+        "ext-soap": "*"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.40",
-        "php-http/mock-client": "^1.6",
         "phpstan/phpstan": "^1.10",
         "phpunit/phpunit": "^10.0 || ^11.0"
     },

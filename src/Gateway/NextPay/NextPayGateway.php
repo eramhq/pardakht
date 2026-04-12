@@ -12,17 +12,15 @@ use Eram\Pardakht\Event\PurchaseInitiated;
 use Eram\Pardakht\Exception\GatewayException;
 use Eram\Pardakht\Exception\VerificationException;
 use Eram\Pardakht\Gateway\AbstractGateway;
+use Eram\Pardakht\Http\EventDispatcher;
+use Eram\Pardakht\Http\HttpClient;
+use Eram\Pardakht\Http\Logger;
 use Eram\Pardakht\Http\PurchaseRequest;
 use Eram\Pardakht\Http\RedirectResponse;
 use Eram\Pardakht\Money\Amount;
 use Eram\Pardakht\Transaction\Transaction;
 use Eram\Pardakht\Transaction\TransactionId;
 use Eram\Pardakht\Transaction\TransactionStatus;
-use Psr\EventDispatcher\EventDispatcherInterface;
-use Psr\Http\Client\ClientInterface;
-use Psr\Http\Message\RequestFactoryInterface;
-use Psr\Http\Message\StreamFactoryInterface;
-use Psr\Log\LoggerInterface;
 
 /**
  * NextPay payment gateway (REST API).
@@ -34,13 +32,11 @@ final class NextPayGateway extends AbstractGateway
 
     public function __construct(
         private readonly NextPayConfig $config,
-        ClientInterface $httpClient,
-        RequestFactoryInterface $requestFactory,
-        StreamFactoryInterface $streamFactory,
-        ?LoggerInterface $logger = null,
-        ?EventDispatcherInterface $eventDispatcher = null,
+        HttpClient $httpClient,
+        ?Logger $logger = null,
+        ?EventDispatcher $eventDispatcher = null,
     ) {
-        parent::__construct($httpClient, $requestFactory, $streamFactory, $logger, $eventDispatcher);
+        parent::__construct($httpClient, $logger, $eventDispatcher);
     }
 
     public function getName(): string
@@ -52,7 +48,7 @@ final class NextPayGateway extends AbstractGateway
     {
         $this->dispatch(new PurchaseInitiated($this->getName(), $request));
 
-        $response = $this->postJson(self::API_URL . '/token', [
+        $data = $this->postJson(self::API_URL . '/token', [
             'api_key' => $this->config->apiKey,
             'amount' => $request->getAmount()->inRials(),
             'callback_uri' => $request->getCallbackUrl(),
@@ -60,7 +56,6 @@ final class NextPayGateway extends AbstractGateway
             'customer_phone' => $request->getMobile(),
         ]);
 
-        $data = $this->decodeResponse($response);
         $code = (int) ($data['code'] ?? 0);
 
         if ($code !== -1) {
@@ -88,13 +83,12 @@ final class NextPayGateway extends AbstractGateway
         $orderId = (string) ($callbackData['order_id'] ?? '');
         $amount = (int) ($callbackData['amount'] ?? 0);
 
-        $response = $this->postJson(self::API_URL . '/verify', [
+        $data = $this->postJson(self::API_URL . '/verify', [
             'api_key' => $this->config->apiKey,
             'trans_id' => $transId,
             'amount' => $amount,
         ]);
 
-        $data = $this->decodeResponse($response);
         $code = (int) ($data['code'] ?? -1);
 
         if ($code !== 0) {
@@ -115,7 +109,7 @@ final class NextPayGateway extends AbstractGateway
             status: TransactionStatus::Verified,
             referenceId: $transId,
             trackingCode: $shaparakRefId,
-            cardNumber: $cardHolder !== '' ? $cardHolder : null,
+            cardNumber: $this->nullIfEmpty($cardHolder),
             extra: [
                 'order_id' => $orderId,
                 'Shaparak_Ref_Id' => $shaparakRefId,

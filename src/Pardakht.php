@@ -29,53 +29,41 @@ use Eram\Pardakht\Gateway\Zarinpal\ZarinpalConfig;
 use Eram\Pardakht\Gateway\Zarinpal\ZarinpalGateway;
 use Eram\Pardakht\Gateway\Zibal\ZibalConfig;
 use Eram\Pardakht\Gateway\Zibal\ZibalGateway;
+use Eram\Pardakht\Http\CurlHttpClient;
+use Eram\Pardakht\Http\EventDispatcher;
+use Eram\Pardakht\Http\HttpClient;
+use Eram\Pardakht\Http\Logger;
+use Eram\Pardakht\Http\NullLogger;
 use Eram\Pardakht\Http\SoapClientFactory;
-use Psr\EventDispatcher\EventDispatcherInterface;
-use Psr\Http\Client\ClientInterface;
-use Psr\Http\Message\RequestFactoryInterface;
-use Psr\Http\Message\StreamFactoryInterface;
-use Psr\Log\LoggerInterface;
 
 /**
  * Main entry point for the Pardakht payment library.
  *
- * Usage (zero-config with Guzzle installed):
+ * Usage (zero-config):
  *   $pardakht = new Pardakht();
  *   $gateway = $pardakht->create('zarinpal', new ZarinpalConfig('merchant-id'));
  *   $response = $gateway->purchase($request);
  */
 final class Pardakht
 {
-    private ClientInterface $httpClient;
-    private RequestFactoryInterface $requestFactory;
-    private StreamFactoryInterface $streamFactory;
-    private ?LoggerInterface $logger;
-    private ?EventDispatcherInterface $eventDispatcher;
-    private SoapClientFactory $soapFactory;
+    private HttpClient $httpClient;
+    private Logger $logger;
+    private ?EventDispatcher $eventDispatcher;
+    private ?SoapClientFactory $soapFactory;
 
     /**
-     * All parameters are optional — Guzzle is auto-discovered if installed.
+     * All parameters are optional — defaults use native ext-curl and ext-soap.
      */
     public function __construct(
-        ?ClientInterface $httpClient = null,
-        ?RequestFactoryInterface $requestFactory = null,
-        ?StreamFactoryInterface $streamFactory = null,
-        ?LoggerInterface $logger = null,
-        ?EventDispatcherInterface $eventDispatcher = null,
+        ?HttpClient $httpClient = null,
+        ?Logger $logger = null,
+        ?EventDispatcher $eventDispatcher = null,
         ?SoapClientFactory $soapFactory = null,
     ) {
-        if ($httpClient === null || $requestFactory === null || $streamFactory === null) {
-            self::assertGuzzleInstalled();
-            /** @var \GuzzleHttp\Psr7\HttpFactory $factory */
-            $factory = new \GuzzleHttp\Psr7\HttpFactory();
-        }
-
-        $this->httpClient = $httpClient ?? new \GuzzleHttp\Client();
-        $this->requestFactory = $requestFactory ?? $factory;
-        $this->streamFactory = $streamFactory ?? $factory;
-        $this->logger = $logger;
+        $this->httpClient = $httpClient ?? new CurlHttpClient();
+        $this->logger = $logger ?? new NullLogger();
         $this->eventDispatcher = $eventDispatcher;
-        $this->soapFactory = $soapFactory ?? new SoapClientFactory();
+        $this->soapFactory = $soapFactory;
     }
 
     /**
@@ -88,60 +76,51 @@ final class Pardakht
         return match ($gateway) {
             'mellat' => new MellatGateway(
                 self::ensure($config, MellatConfig::class),
-                $this->soapFactory, $this->logger, $this->eventDispatcher,
+                $this->soapFactory(), $this->logger, $this->eventDispatcher,
             ),
             'saman' => new SamanGateway(
                 self::ensure($config, SamanConfig::class),
-                $this->soapFactory, $this->logger, $this->eventDispatcher,
+                $this->soapFactory(), $this->logger, $this->eventDispatcher,
             ),
             'parsian' => new ParsianGateway(
                 self::ensure($config, ParsianConfig::class),
-                $this->soapFactory, $this->logger, $this->eventDispatcher,
+                $this->soapFactory(), $this->logger, $this->eventDispatcher,
             ),
             'sadad' => new SadadGateway(
                 self::ensure($config, SadadConfig::class),
-                $this->httpClient, $this->requestFactory, $this->streamFactory,
-                $this->logger, $this->eventDispatcher,
+                $this->httpClient, $this->logger, $this->eventDispatcher,
             ),
             'pasargad' => new PasargadGateway(
                 self::ensure($config, PasargadConfig::class),
-                $this->httpClient, $this->requestFactory, $this->streamFactory,
-                $this->logger, $this->eventDispatcher,
+                $this->httpClient, $this->logger, $this->eventDispatcher,
             ),
             'zarinpal' => new ZarinpalGateway(
                 self::ensure($config, ZarinpalConfig::class),
-                $this->httpClient, $this->requestFactory, $this->streamFactory,
-                $this->logger, $this->eventDispatcher,
+                $this->httpClient, $this->logger, $this->eventDispatcher,
             ),
             'idpay' => new IDPayGateway(
                 self::ensure($config, IDPayConfig::class),
-                $this->httpClient, $this->requestFactory, $this->streamFactory,
-                $this->logger, $this->eventDispatcher,
+                $this->httpClient, $this->logger, $this->eventDispatcher,
             ),
             'zibal' => new ZibalGateway(
                 self::ensure($config, ZibalConfig::class),
-                $this->httpClient, $this->requestFactory, $this->streamFactory,
-                $this->logger, $this->eventDispatcher,
+                $this->httpClient, $this->logger, $this->eventDispatcher,
             ),
             'payir' => new PayIrGateway(
                 self::ensure($config, PayIrConfig::class),
-                $this->httpClient, $this->requestFactory, $this->streamFactory,
-                $this->logger, $this->eventDispatcher,
+                $this->httpClient, $this->logger, $this->eventDispatcher,
             ),
             'nextpay' => new NextPayGateway(
                 self::ensure($config, NextPayConfig::class),
-                $this->httpClient, $this->requestFactory, $this->streamFactory,
-                $this->logger, $this->eventDispatcher,
+                $this->httpClient, $this->logger, $this->eventDispatcher,
             ),
             'vandar' => new VandarGateway(
                 self::ensure($config, VandarConfig::class),
-                $this->httpClient, $this->requestFactory, $this->streamFactory,
-                $this->logger, $this->eventDispatcher,
+                $this->httpClient, $this->logger, $this->eventDispatcher,
             ),
             'sizpay' => new SizpayGateway(
                 self::ensure($config, SizpayConfig::class),
-                $this->httpClient, $this->requestFactory, $this->streamFactory,
-                $this->logger, $this->eventDispatcher,
+                $this->httpClient, $this->logger, $this->eventDispatcher,
             ),
             default => throw new \InvalidArgumentException(
                 \sprintf('Unknown gateway "%s". Available: %s', $gateway, \implode(', ', self::available())),
@@ -160,6 +139,11 @@ final class Pardakht
         ];
     }
 
+    private function soapFactory(): SoapClientFactory
+    {
+        return $this->soapFactory ??= new SoapClientFactory();
+    }
+
     /**
      * @template T of object
      * @param class-string<T> $expected
@@ -174,15 +158,5 @@ final class Pardakht
         }
 
         return $config;
-    }
-
-    private static function assertGuzzleInstalled(): void
-    {
-        if (!\class_exists(\GuzzleHttp\Client::class)) {
-            throw new \RuntimeException(
-                'No PSR-18 HTTP client provided. Install Guzzle (composer require guzzlehttp/guzzle guzzlehttp/psr7) '
-                . 'or pass your own ClientInterface, RequestFactoryInterface, and StreamFactoryInterface.',
-            );
-        }
     }
 }

@@ -14,6 +14,8 @@ use Eram\Pardakht\Event\PurchaseInitiated;
 use Eram\Pardakht\Exception\GatewayException;
 use Eram\Pardakht\Exception\VerificationException;
 use Eram\Pardakht\Gateway\AbstractSoapGateway;
+use Eram\Pardakht\Http\EventDispatcher;
+use Eram\Pardakht\Http\Logger;
 use Eram\Pardakht\Http\PurchaseRequest;
 use Eram\Pardakht\Http\RedirectResponse;
 use Eram\Pardakht\Http\SoapClientFactory;
@@ -21,8 +23,6 @@ use Eram\Pardakht\Money\Amount;
 use Eram\Pardakht\Transaction\Transaction;
 use Eram\Pardakht\Transaction\TransactionId;
 use Eram\Pardakht\Transaction\TransactionStatus;
-use Psr\EventDispatcher\EventDispatcherInterface;
-use Psr\Log\LoggerInterface;
 
 /**
  * Mellat Bank (Behpardakht) payment gateway.
@@ -37,8 +37,8 @@ final class MellatGateway extends AbstractSoapGateway implements SupportsSettlem
     public function __construct(
         private readonly MellatConfig $config,
         ?SoapClientFactory $soapFactory = null,
-        ?LoggerInterface $logger = null,
-        ?EventDispatcherInterface $eventDispatcher = null,
+        ?Logger $logger = null,
+        ?EventDispatcher $eventDispatcher = null,
     ) {
         parent::__construct($soapFactory, $logger, $eventDispatcher);
     }
@@ -134,7 +134,7 @@ final class MellatGateway extends AbstractSoapGateway implements SupportsSettlem
             status: TransactionStatus::Verified,
             referenceId: $refId,
             trackingCode: $saleReferenceId,
-            cardNumber: $cardHolderPan !== '' ? $cardHolderPan : null,
+            cardNumber: $this->nullIfEmpty($cardHolderPan),
             extra: [
                 'SaleOrderId' => $saleOrderId,
                 'SaleReferenceId' => $saleReferenceId,

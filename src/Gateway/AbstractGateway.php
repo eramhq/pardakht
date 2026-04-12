@@ -7,16 +7,12 @@ namespace Eram\Pardakht\Gateway;
 use Eram\Pardakht\Contracts\GatewayInterface;
 use Eram\Pardakht\Contracts\TransactionInterface;
 use Eram\Pardakht\Exception\ConnectionException;
+use Eram\Pardakht\Http\EventDispatcher;
+use Eram\Pardakht\Http\HttpClient;
+use Eram\Pardakht\Http\Logger;
+use Eram\Pardakht\Http\NullLogger;
 use Eram\Pardakht\Http\PurchaseRequest;
 use Eram\Pardakht\Http\RedirectResponse;
-use Psr\EventDispatcher\EventDispatcherInterface;
-use Psr\Http\Client\ClientExceptionInterface;
-use Psr\Http\Client\ClientInterface;
-use Psr\Http\Message\RequestFactoryInterface;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\StreamFactoryInterface;
-use Psr\Log\LoggerInterface;
-use Psr\Log\NullLogger;
 
 /**
  * Base class for REST-based payment gateways.
@@ -25,21 +21,15 @@ abstract class AbstractGateway implements GatewayInterface
 {
     use GatewayHelperTrait;
 
-    protected ClientInterface $httpClient;
-    protected RequestFactoryInterface $requestFactory;
-    protected StreamFactoryInterface $streamFactory;
-    protected LoggerInterface $logger;
+    protected HttpClient $httpClient;
+    protected Logger $logger;
 
     public function __construct(
-        ClientInterface $httpClient,
-        RequestFactoryInterface $requestFactory,
-        StreamFactoryInterface $streamFactory,
-        ?LoggerInterface $logger = null,
-        ?EventDispatcherInterface $eventDispatcher = null,
+        HttpClient $httpClient,
+        ?Logger $logger = null,
+        ?EventDispatcher $eventDispatcher = null,
     ) {
         $this->httpClient = $httpClient;
-        $this->requestFactory = $requestFactory;
-        $this->streamFactory = $streamFactory;
         $this->logger = $logger ?? new NullLogger();
         $this->eventDispatcher = $eventDispatcher;
     }
@@ -56,42 +46,19 @@ abstract class AbstractGateway implements GatewayInterface
     abstract public function verify(?array $callbackData = null): TransactionInterface;
 
     /**
-     * Auto-detect callback data from the current request.
-     *
-     * @param array<string, mixed>|null $callbackData
-     * @return array<string, mixed>
-     */
-    protected function resolveCallbackData(?array $callbackData): array
-    {
-        if ($callbackData !== null) {
-            return $callbackData;
-        }
-
-        // Auto-detect from superglobals
-        if (!empty($_POST)) {
-            return $_POST;
-        }
-
-        return $_GET;
-    }
-
-    /**
-     * Send a JSON POST request to the gateway API.
+     * POST JSON to the gateway API and return the decoded response body.
      *
      * @param array<string, mixed> $data
      * @param array<string, string> $headers
+     * @return array<string, mixed>
+     * @throws ConnectionException On transport, encode, or decode failure.
      */
-    protected function postJson(string $url, array $data, array $headers = []): ResponseInterface
+    protected function postJson(string $url, array $data, array $headers = []): array
     {
-        $body = \json_encode($data, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
-
-        $request = $this->requestFactory->createRequest('POST', $url)
-            ->withHeader('Content-Type', 'application/json')
-            ->withHeader('Accept', 'application/json')
-            ->withBody($this->streamFactory->createStream($body));
-
-        foreach ($headers as $name => $value) {
-            $request = $request->withHeader($name, $value);
+        try {
+            $jsonBody = \json_encode($data, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
+        } catch (\JsonException $e) {
+            throw new ConnectionException("Failed to encode request body: {$e->getMessage()}", 0, $e);
         }
 
         $this->logger->debug('Pardakht: sending request', [
@@ -99,27 +66,19 @@ abstract class AbstractGateway implements GatewayInterface
             'url' => $url,
         ]);
 
+        $response = $this->httpClient->postJson($url, $jsonBody, $headers);
+
         try {
-            return $this->httpClient->sendRequest($request);
-        } catch (ClientExceptionInterface $e) {
+            /** @var array<string, mixed> $decoded */
+            $decoded = \json_decode($response->body, true, 512, JSON_THROW_ON_ERROR);
+        } catch (\JsonException $e) {
             throw new ConnectionException(
-                \sprintf('HTTP request to %s failed: %s', $url, $e->getMessage()),
+                \sprintf('Failed to decode response from %s: %s', $url, $e->getMessage()),
                 0,
                 $e,
             );
         }
-    }
 
-    /**
-     * Decode a JSON response body.
-     *
-     * @return array<string, mixed>
-     */
-    protected function decodeResponse(ResponseInterface $response): array
-    {
-        /** @var array<string, mixed> $data */
-        $data = \json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
-
-        return $data;
+        return $decoded;
     }
 }

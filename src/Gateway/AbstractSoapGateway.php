@@ -7,12 +7,12 @@ namespace Eram\Pardakht\Gateway;
 use Eram\Pardakht\Contracts\GatewayInterface;
 use Eram\Pardakht\Contracts\TransactionInterface;
 use Eram\Pardakht\Exception\ConnectionException;
+use Eram\Pardakht\Http\EventDispatcher;
+use Eram\Pardakht\Http\Logger;
+use Eram\Pardakht\Http\NullLogger;
 use Eram\Pardakht\Http\PurchaseRequest;
 use Eram\Pardakht\Http\RedirectResponse;
 use Eram\Pardakht\Http\SoapClientFactory;
-use Psr\EventDispatcher\EventDispatcherInterface;
-use Psr\Log\LoggerInterface;
-use Psr\Log\NullLogger;
 
 /**
  * Base class for SOAP-based bank payment gateways (Mellat, Parsian, Sadad, etc.).
@@ -22,13 +22,13 @@ abstract class AbstractSoapGateway implements GatewayInterface
     use GatewayHelperTrait;
 
     protected SoapClientFactory $soapFactory;
-    protected LoggerInterface $logger;
+    protected Logger $logger;
     private ?\SoapClient $client = null;
 
     public function __construct(
         ?SoapClientFactory $soapFactory = null,
-        ?LoggerInterface $logger = null,
-        ?EventDispatcherInterface $eventDispatcher = null,
+        ?Logger $logger = null,
+        ?EventDispatcher $eventDispatcher = null,
     ) {
         $this->soapFactory = $soapFactory ?? new SoapClientFactory();
         $this->logger = $logger ?? new NullLogger();
@@ -48,25 +48,6 @@ abstract class AbstractSoapGateway implements GatewayInterface
      * Get the WSDL URL for this gateway.
      */
     abstract protected function getWsdlUrl(): string;
-
-    /**
-     * Auto-detect callback data from the current request.
-     *
-     * @param array<string, mixed>|null $callbackData
-     * @return array<string, mixed>
-     */
-    protected function resolveCallbackData(?array $callbackData): array
-    {
-        if ($callbackData !== null) {
-            return $callbackData;
-        }
-
-        if (!empty($_POST)) {
-            return $_POST;
-        }
-
-        return $_GET;
-    }
 
     /**
      * Get or create the SoapClient instance.

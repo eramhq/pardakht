@@ -121,9 +121,29 @@ $sheba->bankName();  // detected from Sheba code
 Sheba::isValid('IR062960000000100324200001'); // true
 ```
 
+## Custom HTTP Client
+
+Pardakht ships with a built-in `CurlHttpClient` and has **zero packagist dependencies**. If you need a custom HTTP client, implement the single-method interface:
+
+```php
+use Eram\Pardakht\Http\HttpClient;
+use Eram\Pardakht\Http\HttpResponse;
+
+class MyHttpClient implements HttpClient
+{
+    public function postJson(string $url, string $body, array $headers = []): HttpResponse
+    {
+        // your implementation
+        return new HttpResponse(200, $responseBody);
+    }
+}
+
+$pardakht = new Pardakht(httpClient: new MyHttpClient());
+```
+
 ## Events
 
-Pass any PSR-14 event dispatcher and receive lifecycle events: `PurchaseInitiated`, `CallbackReceived`, `PaymentVerified`, `PaymentSettled`, `PaymentFailed`.
+Implement `Eram\Pardakht\Http\EventDispatcher` to receive lifecycle events: `PurchaseInitiated`, `CallbackReceived`, `PaymentVerified`, `PaymentSettled`, `PaymentFailed`.
 
 ```php
 $pardakht = new Pardakht(eventDispatcher: $yourDispatcher);

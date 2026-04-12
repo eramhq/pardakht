@@ -7,11 +7,11 @@ namespace Eram\Pardakht\Gateway;
 use Eram\Pardakht\Event\PaymentFailed;
 use Eram\Pardakht\Exception\GatewayException;
 use Eram\Pardakht\Exception\VerificationException;
-use Psr\EventDispatcher\EventDispatcherInterface;
+use Eram\Pardakht\Http\EventDispatcher;
 
 trait GatewayHelperTrait
 {
-    protected ?EventDispatcherInterface $eventDispatcher = null;
+    protected ?EventDispatcher $eventDispatcher = null;
 
     protected function dispatch(object $event): void
     {
@@ -35,5 +35,22 @@ trait GatewayHelperTrait
     protected function nullIfEmpty(string $value): ?string
     {
         return $value !== '' ? $value : null;
+    }
+
+    /**
+     * @param array<string, mixed>|null $callbackData
+     * @return array<string, mixed>
+     */
+    protected function resolveCallbackData(?array $callbackData): array
+    {
+        if ($callbackData !== null) {
+            return $callbackData;
+        }
+
+        if (!empty($_POST)) {
+            return $_POST;
+        }
+
+        return $_GET;
     }
 }

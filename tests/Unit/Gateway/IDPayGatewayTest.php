@@ -8,32 +8,24 @@ use Eram\Pardakht\Exception\GatewayException;
 use Eram\Pardakht\Exception\VerificationException;
 use Eram\Pardakht\Gateway\IDPay\IDPayConfig;
 use Eram\Pardakht\Gateway\IDPay\IDPayGateway;
+use Eram\Pardakht\Http\HttpClient;
+use Eram\Pardakht\Http\HttpResponse;
 use Eram\Pardakht\Http\PurchaseRequest;
 use Eram\Pardakht\Money\Amount;
 use Eram\Pardakht\Transaction\TransactionStatus;
-use GuzzleHttp\Psr7\HttpFactory;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Psr\Http\Client\ClientInterface;
 
 final class IDPayGatewayTest extends TestCase
 {
-    private HttpFactory $httpFactory;
-
-    protected function setUp(): void
-    {
-        $this->httpFactory = new HttpFactory();
-    }
-
     #[Test]
     public function gateway_name(): void
     {
-        $httpClient = $this->createMock(ClientInterface::class);
+        $httpClient = $this->createMock(HttpClient::class);
+
         $gateway = new IDPayGateway(
             new IDPayConfig('test-api-key'),
             $httpClient,
-            $this->httpFactory,
-            $this->httpFactory,
         );
 
         $this->assertSame('idpay', $gateway->getName());
@@ -42,27 +34,21 @@ final class IDPayGatewayTest extends TestCase
     #[Test]
     public function purchase_returns_redirect(): void
     {
-        $responseBody = \json_encode([
+        $httpClient = $this->createMockHttpClient(201, \json_encode([
             'id' => 'abc123',
             'link' => 'https://idpay.ir/p/ws/abc123',
-        ]);
-
-        $httpClient = $this->createMockHttpClient(201, $responseBody);
+        ]));
 
         $gateway = new IDPayGateway(
             new IDPayConfig('test-api-key'),
             $httpClient,
-            $this->httpFactory,
-            $this->httpFactory,
         );
 
-        $request = new PurchaseRequest(
+        $response = $gateway->purchase(new PurchaseRequest(
             amount: Amount::fromToman(50_000),
             callbackUrl: 'https://example.com/callback',
             orderId: 'ORDER-1',
-        );
-
-        $response = $gateway->purchase($request);
+        ));
 
         $this->assertSame('https://idpay.ir/p/ws/abc123', $response->getUrl());
         $this->assertSame('abc123', $response->getReferenceId());
@@ -71,35 +57,29 @@ final class IDPayGatewayTest extends TestCase
     #[Test]
     public function purchase_throws_on_error(): void
     {
-        $responseBody = \json_encode([
+        $httpClient = $this->createMockHttpClient(403, \json_encode([
             'error_code' => 32,
             'error_message' => 'Invalid API key',
-        ]);
-
-        $httpClient = $this->createMockHttpClient(403, $responseBody);
+        ]));
 
         $gateway = new IDPayGateway(
             new IDPayConfig('invalid-key'),
             $httpClient,
-            $this->httpFactory,
-            $this->httpFactory,
-        );
-
-        $request = new PurchaseRequest(
-            amount: Amount::fromToman(50_000),
-            callbackUrl: 'https://example.com/callback',
-            orderId: 'ORDER-1',
         );
 
         $this->expectException(GatewayException::class);
 
-        $gateway->purchase($request);
+        $gateway->purchase(new PurchaseRequest(
+            amount: Amount::fromToman(50_000),
+            callbackUrl: 'https://example.com/callback',
+            orderId: 'ORDER-1',
+        ));
     }
 
     #[Test]
     public function verify_successful(): void
     {
-        $responseBody = \json_encode([
+        $httpClient = $this->createMockHttpClient(200, \json_encode([
             'status' => 100,
             'track_id' => 12345,
             'amount' => 500000,
@@ -107,15 +87,11 @@ final class IDPayGatewayTest extends TestCase
                 'card_no' => '610433******8718',
                 'hashed_card_no' => 'hash123',
             ],
-        ]);
-
-        $httpClient = $this->createMockHttpClient(200, $responseBody);
+        ]));
 
         $gateway = new IDPayGateway(
             new IDPayConfig('test-api-key'),
             $httpClient,
-            $this->httpFactory,
-            $this->httpFactory,
         );
 
         $transaction = $gateway->verify([
@@ -132,13 +108,11 @@ final class IDPayGatewayTest extends TestCase
     #[Test]
     public function verify_throws_on_failed_status(): void
     {
-        $httpClient = $this->createMock(ClientInterface::class);
+        $httpClient = $this->createMock(HttpClient::class);
 
         $gateway = new IDPayGateway(
             new IDPayConfig('test-api-key'),
             $httpClient,
-            $this->httpFactory,
-            $this->httpFactory,
         );
 
         $this->expectException(VerificationException::class);
@@ -150,14 +124,11 @@ final class IDPayGatewayTest extends TestCase
         ]);
     }
 
-    private function createMockHttpClient(int $statusCode, string $body): ClientInterface
+    private function createMockHttpClient(int $statusCode, string $body): HttpClient
     {
-        $response = $this->httpFactory->createResponse($statusCode)
-            ->withBody($this->httpFactory->createStream($body))
-            ->withHeader('Content-Type', 'application/json');
-
-        $client = $this->createMock(ClientInterface::class);
-        $client->method('sendRequest')->willReturn($response);
+        $client = $this->createMock(HttpClient::class);
+        $client->method('postJson')
+            ->willReturn(new HttpResponse($statusCode, $body));
 
         return $client;
     }

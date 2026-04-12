@@ -9,17 +9,15 @@ use Eram\Pardakht\Event\CallbackReceived;
 use Eram\Pardakht\Event\PaymentVerified;
 use Eram\Pardakht\Event\PurchaseInitiated;
 use Eram\Pardakht\Gateway\AbstractGateway;
+use Eram\Pardakht\Http\EventDispatcher;
+use Eram\Pardakht\Http\HttpClient;
+use Eram\Pardakht\Http\Logger;
 use Eram\Pardakht\Http\PurchaseRequest;
 use Eram\Pardakht\Http\RedirectResponse;
 use Eram\Pardakht\Money\Amount;
 use Eram\Pardakht\Transaction\Transaction;
 use Eram\Pardakht\Transaction\TransactionId;
 use Eram\Pardakht\Transaction\TransactionStatus;
-use Psr\EventDispatcher\EventDispatcherInterface;
-use Psr\Http\Client\ClientInterface;
-use Psr\Http\Message\RequestFactoryInterface;
-use Psr\Http\Message\StreamFactoryInterface;
-use Psr\Log\LoggerInterface;
 
 /**
  * Vandar payment gateway (REST API).
@@ -31,13 +29,11 @@ final class VandarGateway extends AbstractGateway
 
     public function __construct(
         private readonly VandarConfig $config,
-        ClientInterface $httpClient,
-        RequestFactoryInterface $requestFactory,
-        StreamFactoryInterface $streamFactory,
-        ?LoggerInterface $logger = null,
-        ?EventDispatcherInterface $eventDispatcher = null,
+        HttpClient $httpClient,
+        ?Logger $logger = null,
+        ?EventDispatcher $eventDispatcher = null,
     ) {
-        parent::__construct($httpClient, $requestFactory, $streamFactory, $logger, $eventDispatcher);
+        parent::__construct($httpClient, $logger, $eventDispatcher);
     }
 
     public function getName(): string
@@ -49,7 +45,7 @@ final class VandarGateway extends AbstractGateway
     {
         $this->dispatch(new PurchaseInitiated($this->getName(), $request));
 
-        $response = $this->postJson(self::API_URL . '/send', [
+        $data = $this->postJson(self::API_URL . '/send', [
             'api_key' => $this->config->apiKey,
             'amount' => $request->getAmount()->inRials(),
             'callback_url' => $request->getCallbackUrl(),
@@ -58,7 +54,6 @@ final class VandarGateway extends AbstractGateway
             'factorNumber' => $request->getOrderId(),
         ]);
 
-        $data = $this->decodeResponse($response);
         $status = (int) ($data['status'] ?? 0);
 
         if ($status !== 1) {
@@ -82,17 +77,14 @@ final class VandarGateway extends AbstractGateway
         $paymentStatus = (string) ($callbackData['payment_status'] ?? '');
 
         if ($paymentStatus !== 'OK') {
-            $this->dispatch(new PaymentFailed($this->getName(), 'Payment cancelled'));
-
-            throw new VerificationException('Payment cancelled', $this->getName(), -1);
+            $this->failVerification('Payment cancelled', -1);
         }
 
-        $response = $this->postJson(self::API_URL . '/verify', [
+        $data = $this->postJson(self::API_URL . '/verify', [
             'api_key' => $this->config->apiKey,
             'token' => $token,
         ]);
 
-        $data = $this->decodeResponse($response);
         $status = (int) ($data['status'] ?? 0);
 
         if ($status !== 1) {
@@ -111,7 +103,7 @@ final class VandarGateway extends AbstractGateway
             status: TransactionStatus::Verified,
             referenceId: $token,
             trackingCode: $transId,
-            cardNumber: $cardNumber !== '' ? $cardNumber : null,
+            cardNumber: $this->nullIfEmpty($cardNumber),
             extra: [
                 'factorNumber' => $factorNumber,
                 'cid' => $data['cid'] ?? '',
