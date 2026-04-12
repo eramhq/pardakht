@@ -95,20 +95,20 @@ final class BankIdentifier
 
     public static function fromCardNumber(string $cardNumber): ?string
     {
-        $bin = \substr(\preg_replace('/\D/', '', $cardNumber) ?? '', 0, 6);
+        $bin = substr(preg_replace('/\D/', '', $cardNumber) ?? '', 0, 6);
 
         return self::BINS[$bin] ?? null;
     }
 
     public static function fromSheba(string $sheba): ?string
     {
-        $normalized = \strtoupper(\preg_replace('/\s/', '', $sheba) ?? '');
+        $normalized = strtoupper(preg_replace('/\s/', '', $sheba) ?? '');
 
-        if (\str_starts_with($normalized, 'IR')) {
-            $normalized = \substr($normalized, 2);
+        if (str_starts_with($normalized, 'IR')) {
+            $normalized = substr($normalized, 2);
         }
 
-        $bankCode = \substr($normalized, 2, 3);
+        $bankCode = substr($normalized, 2, 3);
 
         return self::SHEBA_CODES[$bankCode] ?? null;
     }

@@ -10,6 +10,5 @@ final class PasargadConfig
         public string $merchantCode,
         public string $terminalCode,
         public string $privateKey,
-    ) {
-    }
+    ) {}
 }

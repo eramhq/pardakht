@@ -8,6 +8,5 @@ final class NextPayConfig
 {
     public function __construct(
         public string $apiKey,
-    ) {
-    }
+    ) {}
 }

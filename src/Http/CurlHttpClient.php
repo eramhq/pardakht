@@ -25,13 +25,12 @@ final class CurlHttpClient implements HttpClient
         private readonly bool $verifySsl = true,
         private readonly ?string $caBundle = null,
         private readonly string $userAgent = 'Pardakht/1.0',
-    ) {
-    }
+    ) {}
 
     public function __destruct()
     {
         if ($this->handle !== null) {
-            \curl_close($this->handle);
+            curl_close($this->handle);
         }
     }
 
@@ -50,7 +49,7 @@ final class CurlHttpClient implements HttpClient
         $this->responseHeaders = [];
         $ch = $this->getHandle();
 
-        \curl_setopt_array($ch, [
+        curl_setopt_array($ch, [
             CURLOPT_URL => $url,
             CURLOPT_POST => true,
             CURLOPT_POSTFIELDS => $body,
@@ -66,13 +65,13 @@ final class CurlHttpClient implements HttpClient
         ]);
 
         if ($this->caBundle !== null) {
-            \curl_setopt($ch, CURLOPT_CAINFO, $this->caBundle);
+            curl_setopt($ch, CURLOPT_CAINFO, $this->caBundle);
         }
 
-        $responseBody = \curl_exec($ch);
-        $errno = \curl_errno($ch);
-        $error = \curl_error($ch);
-        $statusCode = (int) \curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $responseBody = curl_exec($ch);
+        $errno = curl_errno($ch);
+        $error = curl_error($ch);
+        $statusCode = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
         if ($responseBody === false || $errno !== 0) {
             throw new ConnectionException(
@@ -86,7 +85,7 @@ final class CurlHttpClient implements HttpClient
     private function getHandle(): \CurlHandle
     {
         if ($this->handle === null) {
-            $handle = \curl_init();
+            $handle = curl_init();
 
             if ($handle === false) {
                 throw new ConnectionException('Failed to initialize curl handle.');
@@ -94,7 +93,7 @@ final class CurlHttpClient implements HttpClient
 
             $this->handle = $handle;
         } else {
-            \curl_reset($this->handle);
+            curl_reset($this->handle);
         }
 
         return $this->handle;
@@ -103,11 +102,11 @@ final class CurlHttpClient implements HttpClient
     private function headerCallback(\CurlHandle $ch, string $header): int
     {
         $len = \strlen($header);
-        $colonPos = \strpos($header, ':');
+        $colonPos = strpos($header, ':');
 
         if ($colonPos !== false) {
-            $name = \strtolower(\trim(\substr($header, 0, $colonPos)));
-            $value = \trim(\substr($header, $colonPos + 1));
+            $name = strtolower(trim(substr($header, 0, $colonPos)));
+            $value = trim(substr($header, $colonPos + 1));
             $this->responseHeaders[$name] = $value;
         }
 

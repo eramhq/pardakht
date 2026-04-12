@@ -9,6 +9,5 @@ final class ZarinpalConfig
     public function __construct(
         public string $merchantId,
         public bool $sandbox = false,
-    ) {
-    }
+    ) {}
 }

@@ -22,8 +22,7 @@ final class PurchaseRequest
         private ?string $mobile = null,
         private ?string $email = null,
         private array $extra = [],
-    ) {
-    }
+    ) {}
 
     public function getAmount(): Amount
     {

@@ -8,6 +8,5 @@ final class SamanConfig
 {
     public function __construct(
         public string $merchantId,
-    ) {
-    }
+    ) {}
 }

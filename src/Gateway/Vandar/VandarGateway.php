@@ -124,8 +124,8 @@ final class VandarGateway extends AbstractGateway
             return $fallback;
         }
 
-        return \implode(', ', \array_map(
-            fn ($e) => \is_array($e) ? \implode(', ', $e) : (string) $e,
+        return implode(', ', array_map(
+            fn($e) => \is_array($e) ? implode(', ', $e) : (string) $e,
             $errors,
         ));
     }

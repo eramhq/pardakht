@@ -10,6 +10,5 @@ final class SadadConfig
         public string $merchantId,
         public string $terminalId,
         public string $terminalKey,
-    ) {
-    }
+    ) {}
 }

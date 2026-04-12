@@ -6,7 +6,5 @@ namespace Eram\Pardakht\Http;
 
 final class NullLogger implements Logger
 {
-    public function debug(string $message, array $context = []): void
-    {
-    }
+    public function debug(string $message, array $context = []): void {}
 }

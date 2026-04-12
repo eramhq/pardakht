@@ -8,6 +8,5 @@ final class ZibalConfig
 {
     public function __construct(
         public string $merchant,
-    ) {
-    }
+    ) {}
 }

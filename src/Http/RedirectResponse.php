@@ -18,8 +18,7 @@ final class RedirectResponse
         private string $method,
         private string $referenceId,
         private array $formData = [],
-    ) {
-    }
+    ) {}
 
     /**
      * Create a GET redirect response (used by REST gateways like Zarinpal).
@@ -75,7 +74,7 @@ final class RedirectResponse
         if (!$this->isPost()) {
             return \sprintf(
                 '<meta http-equiv="refresh" content="0;url=%s">',
-                \htmlspecialchars($this->url, ENT_QUOTES, 'UTF-8'),
+                htmlspecialchars($this->url, ENT_QUOTES, 'UTF-8'),
             );
         }
 
@@ -83,13 +82,13 @@ final class RedirectResponse
         foreach ($this->formData as $name => $value) {
             $fields .= \sprintf(
                 '<input type="hidden" name="%s" value="%s">',
-                \htmlspecialchars($name, ENT_QUOTES, 'UTF-8'),
-                \htmlspecialchars($value, ENT_QUOTES, 'UTF-8'),
+                htmlspecialchars($name, ENT_QUOTES, 'UTF-8'),
+                htmlspecialchars($value, ENT_QUOTES, 'UTF-8'),
             );
         }
 
-        $escapedUrl = \htmlspecialchars($this->url, ENT_QUOTES, 'UTF-8');
-        $escapedSubmit = \htmlspecialchars($submitText, ENT_QUOTES, 'UTF-8');
+        $escapedUrl = htmlspecialchars($this->url, ENT_QUOTES, 'UTF-8');
+        $escapedSubmit = htmlspecialchars($submitText, ENT_QUOTES, 'UTF-8');
 
         return <<<HTML
             <html dir="rtl">

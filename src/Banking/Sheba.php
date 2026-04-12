@@ -15,13 +15,13 @@ final class Sheba
 
     public function __construct(string $sheba)
     {
-        $normalized = \strtoupper(\preg_replace('/[\s-]/', '', $sheba) ?? '');
+        $normalized = strtoupper(preg_replace('/[\s-]/', '', $sheba) ?? '');
 
-        if (!\str_starts_with($normalized, 'IR')) {
+        if (!str_starts_with($normalized, 'IR')) {
             $normalized = 'IR' . $normalized;
         }
 
-        if (!\preg_match('/^IR\d{24}$/', $normalized)) {
+        if (!preg_match('/^IR\d{24}$/', $normalized)) {
             throw new \InvalidArgumentException(
                 'Sheba must be in format IR + 24 digits (26 characters total).'
             );
@@ -44,7 +44,7 @@ final class Sheba
      */
     public function digits(): string
     {
-        return \substr($this->value, 2);
+        return substr($this->value, 2);
     }
 
     public function bankName(): ?string
@@ -57,9 +57,9 @@ final class Sheba
      */
     public function formatted(): string
     {
-        $parts = \str_split($this->value, 4);
+        $parts = str_split($this->value, 4);
 
-        return \implode(' ', $parts);
+        return implode(' ', $parts);
     }
 
     public function equals(self $other): bool
@@ -91,13 +91,13 @@ final class Sheba
     private static function validateChecksum(string $iban): bool
     {
         // Move the first 4 characters to the end
-        $rearranged = \substr($iban, 4) . \substr($iban, 0, 4);
+        $rearranged = substr($iban, 4) . substr($iban, 0, 4);
 
         // Replace letters with numbers (A=10, B=11, ..., Z=35)
         $numeric = '';
         for ($i = 0, $len = \strlen($rearranged); $i < $len; $i++) {
             $char = $rearranged[$i];
-            if (\ctype_alpha($char)) {
+            if (ctype_alpha($char)) {
                 $numeric .= (string) (\ord($char) - 55);
             } else {
                 $numeric .= $char;

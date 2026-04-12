@@ -13,7 +13,7 @@ final class CardNumber
 
     public function __construct(string $number)
     {
-        $this->number = \preg_replace('/\D/', '', $number) ?? '';
+        $this->number = preg_replace('/\D/', '', $number) ?? '';
 
         if (\strlen($this->number) !== 16) {
             throw new \InvalidArgumentException('Card number must be exactly 16 digits.');
@@ -34,9 +34,9 @@ final class CardNumber
      */
     public function masked(): string
     {
-        return \substr($this->number, 0, 6)
+        return substr($this->number, 0, 6)
             . '******'
-            . \substr($this->number, 12, 4);
+            . substr($this->number, 12, 4);
     }
 
     /**
@@ -44,7 +44,7 @@ final class CardNumber
      */
     public function formatted(): string
     {
-        return \implode('-', \str_split($this->number, 4));
+        return implode('-', str_split($this->number, 4));
     }
 
     public function bankName(): ?string
@@ -67,7 +67,7 @@ final class CardNumber
      */
     public static function isValid(string $number): bool
     {
-        $digits = \preg_replace('/\D/', '', $number) ?? '';
+        $digits = preg_replace('/\D/', '', $number) ?? '';
 
         return \strlen($digits) === 16 && self::luhn($digits);
     }

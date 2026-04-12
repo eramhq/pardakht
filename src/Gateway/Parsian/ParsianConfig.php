@@ -8,6 +8,5 @@ final class ParsianConfig
 {
     public function __construct(
         public string $pin,
-    ) {
-    }
+    ) {}
 }

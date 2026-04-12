@@ -11,6 +11,5 @@ final class PaymentVerified
     public function __construct(
         public string $gatewayName,
         public TransactionInterface $transaction,
-    ) {
-    }
+    ) {}
 }

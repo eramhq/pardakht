@@ -54,7 +54,7 @@ final class SadadGateway extends AbstractGateway
 
         $orderId = $request->getOrderId();
         $amount = $request->getAmount()->inRials();
-        $localDate = \date('m/d/Y g:i:s a');
+        $localDate = date('m/d/Y g:i:s a');
 
         $signData = $this->sign("{$this->config->terminalId};{$orderId};{$amount}");
 
@@ -149,10 +149,10 @@ final class SadadGateway extends AbstractGateway
      */
     private function sign(string $data): string
     {
-        $key = \base64_decode($this->config->terminalKey);
+        $key = base64_decode($this->config->terminalKey, true);
         $iv = "\0\0\0\0\0\0\0\0";
 
-        $encrypted = \openssl_encrypt(
+        $encrypted = openssl_encrypt(
             $data,
             'DES-EDE3-CBC',
             $key,
@@ -164,6 +164,6 @@ final class SadadGateway extends AbstractGateway
             throw new \RuntimeException('Failed to create Sadad signature.');
         }
 
-        return \base64_encode($encrypted);
+        return base64_encode($encrypted);
     }
 }

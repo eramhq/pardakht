@@ -11,6 +11,5 @@ final class PurchaseInitiated
     public function __construct(
         public string $gatewayName,
         public PurchaseRequest $request,
-    ) {
-    }
+    ) {}
 }

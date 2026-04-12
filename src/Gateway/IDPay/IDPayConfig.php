@@ -9,6 +9,5 @@ final class IDPayConfig
     public function __construct(
         public string $apiKey,
         public bool $sandbox = false,
-    ) {
-    }
+    ) {}
 }

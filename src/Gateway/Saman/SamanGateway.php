@@ -9,7 +9,6 @@ use Eram\Pardakht\Event\CallbackReceived;
 use Eram\Pardakht\Event\PaymentFailed;
 use Eram\Pardakht\Event\PaymentVerified;
 use Eram\Pardakht\Event\PurchaseInitiated;
-use Eram\Pardakht\Exception\GatewayException;
 use Eram\Pardakht\Exception\VerificationException;
 use Eram\Pardakht\Gateway\AbstractSoapGateway;
 use Eram\Pardakht\Http\EventDispatcher;

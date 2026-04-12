@@ -34,7 +34,7 @@ final class IDPayGatewayTest extends TestCase
     #[Test]
     public function purchase_returns_redirect(): void
     {
-        $httpClient = $this->createMockHttpClient(201, \json_encode([
+        $httpClient = $this->createMockHttpClient(201, json_encode([
             'id' => 'abc123',
             'link' => 'https://idpay.ir/p/ws/abc123',
         ]));
@@ -57,7 +57,7 @@ final class IDPayGatewayTest extends TestCase
     #[Test]
     public function purchase_throws_on_error(): void
     {
-        $httpClient = $this->createMockHttpClient(403, \json_encode([
+        $httpClient = $this->createMockHttpClient(403, json_encode([
             'error_code' => 32,
             'error_message' => 'Invalid API key',
         ]));
@@ -79,7 +79,7 @@ final class IDPayGatewayTest extends TestCase
     #[Test]
     public function verify_successful(): void
     {
-        $httpClient = $this->createMockHttpClient(200, \json_encode([
+        $httpClient = $this->createMockHttpClient(200, json_encode([
             'status' => 100,
             'track_id' => 12345,
             'amount' => 500000,

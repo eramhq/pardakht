@@ -8,6 +8,5 @@ final class VandarConfig
 {
     public function __construct(
         public string $apiKey,
-    ) {
-    }
+    ) {}
 }

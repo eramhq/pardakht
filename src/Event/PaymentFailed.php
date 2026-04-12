@@ -10,6 +10,5 @@ final class PaymentFailed
         public string $gatewayName,
         public string $reason,
         public int|string $errorCode = 0,
-    ) {
-    }
+    ) {}
 }

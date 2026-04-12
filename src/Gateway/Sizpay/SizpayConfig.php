@@ -12,6 +12,5 @@ final class SizpayConfig
         public string $username,
         public string $password,
         public string $signKey,
-    ) {
-    }
+    ) {}
 }

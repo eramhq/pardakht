@@ -21,7 +21,7 @@ final class ZarinpalGatewayTest extends TestCase
     #[Test]
     public function purchase_returns_redirect_response(): void
     {
-        $httpClient = $this->createMockHttpClient(200, \json_encode([
+        $httpClient = $this->createMockHttpClient(200, json_encode([
             'data' => [
                 'code' => 100,
                 'authority' => 'A00000000000000000000000000217885159',
@@ -48,7 +48,7 @@ final class ZarinpalGatewayTest extends TestCase
     #[Test]
     public function purchase_throws_on_error(): void
     {
-        $httpClient = $this->createMockHttpClient(200, \json_encode([
+        $httpClient = $this->createMockHttpClient(200, json_encode([
             'data' => [],
             'errors' => [
                 'code' => -1,
@@ -73,7 +73,7 @@ final class ZarinpalGatewayTest extends TestCase
     #[Test]
     public function verify_returns_transaction(): void
     {
-        $httpClient = $this->createMockHttpClient(200, \json_encode([
+        $httpClient = $this->createMockHttpClient(200, json_encode([
             'data' => [
                 'code' => 100,
                 'ref_id' => 123456789,

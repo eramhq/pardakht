@@ -41,7 +41,7 @@ class SoapClientFactory
             'connection_timeout' => $this->connectionTimeout,
             'default_socket_timeout' => $this->responseTimeout,
             'cache_wsdl' => $this->cacheWsdl ? WSDL_CACHE_BOTH : WSDL_CACHE_NONE,
-            'stream_context' => \stream_context_create([
+            'stream_context' => stream_context_create([
                 'ssl' => [
                     'verify_peer' => true,
                     'verify_peer_name' => true,
@@ -50,7 +50,7 @@ class SoapClientFactory
         ];
 
         try {
-            return new \SoapClient($wsdlUrl, \array_merge($defaults, $options));
+            return new \SoapClient($wsdlUrl, array_merge($defaults, $options));
         } catch (\SoapFault $e) {
             throw new ConnectionException(
                 \sprintf('Failed to connect to SOAP service at %s: %s', $wsdlUrl, $e->getMessage()),

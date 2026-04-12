@@ -8,6 +8,5 @@ final class PayIrConfig
 {
     public function __construct(
         public string $apiKey,
-    ) {
-    }
+    ) {}
 }

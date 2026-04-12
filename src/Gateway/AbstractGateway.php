@@ -56,7 +56,7 @@ abstract class AbstractGateway implements GatewayInterface
     protected function postJson(string $url, array $data, array $headers = []): array
     {
         try {
-            $jsonBody = \json_encode($data, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
+            $jsonBody = json_encode($data, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
         } catch (\JsonException $e) {
             throw new ConnectionException("Failed to encode request body: {$e->getMessage()}", 0, $e);
         }
@@ -70,7 +70,7 @@ abstract class AbstractGateway implements GatewayInterface
 
         try {
             /** @var array<string, mixed> $decoded */
-            $decoded = \json_decode($response->body, true, 512, JSON_THROW_ON_ERROR);
+            $decoded = json_decode($response->body, true, 512, JSON_THROW_ON_ERROR);
         } catch (\JsonException $e) {
             throw new ConnectionException(
                 \sprintf('Failed to decode response from %s: %s', $url, $e->getMessage()),

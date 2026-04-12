@@ -59,7 +59,7 @@ final class ZarinpalGateway extends AbstractGateway
             'amount' => $request->getAmount()->inRials(),
             'callback_url' => $request->getCallbackUrl(),
             'description' => $request->getDescription(),
-            'metadata' => \array_filter([
+            'metadata' => array_filter([
                 'mobile' => $request->getMobile(),
                 'email' => $request->getEmail(),
                 'order_id' => $request->getOrderId(),

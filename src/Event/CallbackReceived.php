@@ -12,6 +12,5 @@ final class CallbackReceived
     public function __construct(
         public string $gatewayName,
         public array $callbackData,
-    ) {
-    }
+    ) {}
 }

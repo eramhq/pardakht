@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Eram\Pardakht\Tests\Unit\Money;
 
-use Eram\Pardakht\Money\Amount;
 use Eram\Pardakht\Exception\InvalidAmountException;
+use Eram\Pardakht\Money\Amount;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 

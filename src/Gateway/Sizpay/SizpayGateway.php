@@ -49,7 +49,7 @@ final class SizpayGateway extends AbstractGateway
     {
         $this->dispatch(new PurchaseInitiated($this->getName(), $request));
 
-        $signData = \hash('sha256', \implode('', [
+        $signData = hash('sha256', implode('', [
             $this->config->merchantId,
             $this->config->terminalId,
             $request->getAmount()->inRials(),
@@ -66,7 +66,7 @@ final class SizpayGateway extends AbstractGateway
             'OrderID' => (int) $request->getOrderId(),
             'ReturnURL' => $request->getCallbackUrl(),
             'InvoiceNo' => (int) $request->getOrderId(),
-            'DocDate' => \date('Y/m/d'),
+            'DocDate' => date('Y/m/d'),
             'ExtraInf' => $request->getDescription(),
             'SignData' => $signData,
         ]);
@@ -110,7 +110,7 @@ final class SizpayGateway extends AbstractGateway
             throw new VerificationException($message, $this->getName(), $resCode);
         }
 
-        $signData = \hash('sha256', \implode('', [
+        $signData = hash('sha256', implode('', [
             $this->config->merchantId,
             $this->config->terminalId,
             $amount,

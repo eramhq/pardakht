@@ -58,14 +58,14 @@ final class MellatGateway extends AbstractSoapGateway implements SupportsSettlem
             'userPassword' => $this->config->password,
             'orderId' => (int) $request->getOrderId(),
             'amount' => $request->getAmount()->inRials(),
-            'localDate' => \date('Ymd'),
-            'localTime' => \date('His'),
+            'localDate' => date('Ymd'),
+            'localTime' => date('His'),
             'additionalData' => $request->getDescription(),
             'callBackUrl' => $request->getCallbackUrl(),
             'payerId' => 0,
         ]);
 
-        $resultParts = \explode(',', (string) $result->return);
+        $resultParts = explode(',', (string) $result->return);
         $resCode = (int) $resultParts[0];
 
         if ($resCode !== 0) {

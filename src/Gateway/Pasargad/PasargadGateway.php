@@ -54,7 +54,7 @@ final class PasargadGateway extends AbstractGateway
     {
         $this->dispatch(new PurchaseInitiated($this->getName(), $request));
 
-        $timestamp = \date('Y/m/d H:i:s');
+        $timestamp = date('Y/m/d H:i:s');
         $invoiceNumber = $request->getOrderId();
         $amount = $request->getAmount()->inRials();
 
@@ -63,7 +63,7 @@ final class PasargadGateway extends AbstractGateway
             $this->config->merchantCode,
             $this->config->terminalCode,
             $invoiceNumber,
-            \date('Y/m/d'),
+            date('Y/m/d'),
             $amount,
             $request->getCallbackUrl(),
             self::ACTION_PURCHASE,
@@ -75,7 +75,7 @@ final class PasargadGateway extends AbstractGateway
             'MerchantCode' => $this->config->merchantCode,
             'TerminalCode' => $this->config->terminalCode,
             'InvoiceNumber' => $invoiceNumber,
-            'InvoiceDate' => \date('Y/m/d'),
+            'InvoiceDate' => date('Y/m/d'),
             'Amount' => $amount,
             'RedirectAddress' => $request->getCallbackUrl(),
             'Timestamp' => $timestamp,
@@ -127,7 +127,7 @@ final class PasargadGateway extends AbstractGateway
             'InvoiceNumber' => $invoiceNumber,
             'InvoiceDate' => $invoiceDate,
             'Amount' => (int) ($callbackData['Amount'] ?? 0),
-            'Timestamp' => \date('Y/m/d H:i:s'),
+            'Timestamp' => date('Y/m/d H:i:s'),
             'Sign' => $sign,
         ]);
 
@@ -166,7 +166,7 @@ final class PasargadGateway extends AbstractGateway
     private function rsaSign(string $data): string
     {
         if ($this->parsedKey === null) {
-            $key = \openssl_pkey_get_private($this->config->privateKey);
+            $key = openssl_pkey_get_private($this->config->privateKey);
 
             if ($key === false) {
                 throw new \RuntimeException('Invalid Pasargad RSA private key.');
@@ -177,10 +177,10 @@ final class PasargadGateway extends AbstractGateway
 
         $signature = '';
 
-        if (!\openssl_sign($data, $signature, $this->parsedKey, OPENSSL_ALGO_SHA1)) {
+        if (!openssl_sign($data, $signature, $this->parsedKey, OPENSSL_ALGO_SHA1)) {
             throw new \RuntimeException('Failed to create RSA signature for Pasargad.');
         }
 
-        return \base64_encode($signature);
+        return base64_encode($signature);
     }
 }

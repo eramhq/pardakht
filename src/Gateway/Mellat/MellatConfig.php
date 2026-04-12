@@ -10,6 +10,5 @@ final class MellatConfig
         public int $terminalId,
         public string $username,
         public string $password,
-    ) {
-    }
+    ) {}
 }

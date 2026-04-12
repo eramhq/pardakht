@@ -4,6 +4,4 @@ declare(strict_types=1);
 
 namespace Eram\Pardakht\Exception;
 
-class ConnectionException extends PardakhtException
-{
-}
+class ConnectionException extends PardakhtException {}

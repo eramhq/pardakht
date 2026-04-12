@@ -21,8 +21,7 @@ final class Transaction implements TransactionInterface
         private ?string $trackingCode = null,
         private ?string $cardNumber = null,
         private array $extra = [],
-    ) {
-    }
+    ) {}
 
     public function getId(): TransactionId
     {
