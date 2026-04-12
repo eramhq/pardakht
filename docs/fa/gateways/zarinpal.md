@@ -1,0 +1,72 @@
+<div dir="rtl">
+
+# زرین‌پال
+
+> محبوب‌ترین درگاه پرداخت آنلاین ایران. مبتنی بر REST با پشتیبانی سندباکس.
+
+## پیکربندی
+
+```php
+use Eram\Pardakht\Gateway\Zarinpal\ZarinpalConfig;
+
+$config = new ZarinpalConfig(
+    merchantId: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx',
+    sandbox: false, // برای تست true کنید
+);
+```
+
+| پارامتر | نوع | الزامی | پیش‌فرض | توضیحات |
+|-----------|------|----------|---------|-------------|
+| `merchantId` | `string` | بله | — | شناسه مرچنت زرین‌پال |
+| `sandbox` | `bool` | خیر | `false` | استفاده از محیط سندباکس |
+
+## خرید
+
+```php
+$gateway = $pardakht->create('zarinpal', $config);
+
+$response = $gateway->purchase(new PurchaseRequest(
+    amount: Amount::fromToman(50_000),
+    callbackUrl: 'https://example.com/callback',
+    orderId: 'ORDER-123',
+    description: 'اشتراک ویژه',
+    mobile: '09123456789',
+    email: 'user@example.com',
+));
+
+// ریدایرکت GET
+header('Location: ' . $response->getUrl());
+```
+
+## تایید
+
+```php
+$transaction = $gateway->verify();
+
+$transaction->getReferenceId();  // Authority
+$transaction->getTrackingCode(); // RefID
+$transaction->getCardNumber();   // شماره کارت ماسک‌شده
+```
+
+## سندباکس
+
+`sandbox: true` را تنظیم کنید تا از محیط تست زرین‌پال استفاده کنید. پول واقعی کسر نمی‌شود.
+
+```php
+$config = new ZarinpalConfig(
+    merchantId: 'test',
+    sandbox: true,
+);
+```
+
+## تسویه
+
+نیاز نیست. پرداخت‌ها به‌طور خودکار تسویه می‌شوند.
+
+## نکات
+
+- مبلغ به ریال ارسال می‌شود (از `Amount` به‌طور خودکار تبدیل می‌شود)
+- موبایل و ایمیل اختیاری هستند اما تجربه کاربری صفحه پرداخت را بهبود می‌دهند
+- فیلد `description` در صفحه پرداخت به کاربر نمایش داده می‌شود
+
+</div>
