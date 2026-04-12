@@ -64,7 +64,7 @@ abstract class AbstractSoapGateway implements GatewayInterface
     /**
      * Call a SOAP method with error handling.
      *
-     * @param array<string, mixed> $params
+     * @param array<int|string, mixed> $params
      */
     protected function callSoap(string $method, array $params): mixed
     {

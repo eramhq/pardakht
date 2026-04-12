@@ -9,11 +9,6 @@ namespace Eram\Pardakht\Banking;
  */
 final class BankIdentifier
 {
-    /**
-     * BIN prefix => bank name mapping.
-     *
-     * @var array<string, string>
-     */
     private const BINS = [
         '603799' => 'بانک ملی ایران',
         '589210' => 'بانک سپه',
