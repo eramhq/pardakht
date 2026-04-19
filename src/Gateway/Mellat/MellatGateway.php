@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Eram\Pardakht\Gateway\Mellat;
 
+use Eram\Abzar\Money\Amount;
 use Eram\Pardakht\Contracts\SupportsSettlement;
 use Eram\Pardakht\Contracts\TransactionInterface;
 use Eram\Pardakht\Event\CallbackReceived;
@@ -19,7 +20,6 @@ use Eram\Pardakht\Http\Logger;
 use Eram\Pardakht\Http\PurchaseRequest;
 use Eram\Pardakht\Http\RedirectResponse;
 use Eram\Pardakht\Http\SoapClientFactory;
-use Eram\Abzar\Money\Amount;
 use Eram\Pardakht\Transaction\Transaction;
 use Eram\Pardakht\Transaction\TransactionId;
 use Eram\Pardakht\Transaction\TransactionStatus;

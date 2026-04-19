@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Eram\Pardakht\Tests\Unit\Gateway;
 
+use Eram\Abzar\Money\Amount;
 use Eram\Pardakht\Exception\GatewayException;
 use Eram\Pardakht\Exception\VerificationException;
 use Eram\Pardakht\Gateway\IDPay\IDPayConfig;
@@ -11,7 +12,6 @@ use Eram\Pardakht\Gateway\IDPay\IDPayGateway;
 use Eram\Pardakht\Http\HttpClient;
 use Eram\Pardakht\Http\HttpResponse;
 use Eram\Pardakht\Http\PurchaseRequest;
-use Eram\Abzar\Money\Amount;
 use Eram\Pardakht\Transaction\TransactionStatus;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Eram\Pardakht\Gateway\Vandar;
 
+use Eram\Abzar\Money\Amount;
 use Eram\Pardakht\Contracts\TransactionInterface;
 use Eram\Pardakht\Event\CallbackReceived;
 use Eram\Pardakht\Event\PaymentVerified;
@@ -14,7 +15,6 @@ use Eram\Pardakht\Http\HttpClient;
 use Eram\Pardakht\Http\Logger;
 use Eram\Pardakht\Http\PurchaseRequest;
 use Eram\Pardakht\Http\RedirectResponse;
-use Eram\Abzar\Money\Amount;
 use Eram\Pardakht\Transaction\Transaction;
 use Eram\Pardakht\Transaction\TransactionId;
 use Eram\Pardakht\Transaction\TransactionStatus;
