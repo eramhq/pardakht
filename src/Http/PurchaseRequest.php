@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Eram\Pardakht\Http;
 
-use Eram\Pardakht\Money\Amount;
+use Eram\Abzar\Money\Amount;
 
 /**
  * Immutable DTO representing a purchase request to a gateway.

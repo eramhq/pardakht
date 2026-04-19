@@ -1,8 +1,8 @@
 # FAQ
 
-## Why zero dependencies?
+## Why so few dependencies?
 
-Payment libraries are critical infrastructure. Every dependency is a supply-chain risk and a version-conflict surface. Pardakht relies only on PHP extensions (`ext-curl`, `ext-json`, `ext-openssl`, `ext-soap`) that ship with standard PHP installations. No Guzzle, no Symfony components, no framework coupling.
+Payment libraries are critical infrastructure. Every dependency is a supply-chain risk and a version-conflict surface. Pardakht pulls in only [`eram/abzar`](https://github.com/eramhq/abzar-php) — our own Persian/Iranian utility library, MIT-licensed and itself free of third-party runtime deps — and otherwise relies on PHP extensions that ship with standard installations: `ext-curl`, `ext-json`, `ext-openssl`, `ext-soap`. No Guzzle, no Symfony components, no framework coupling.
 
 If you prefer Guzzle or another HTTP client, implement the `HttpClient` interface and inject it — see the [Cookbook](cookbook.md#custom-http-client-guzzle-example).
 

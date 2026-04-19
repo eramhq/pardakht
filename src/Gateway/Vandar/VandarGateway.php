@@ -14,7 +14,7 @@ use Eram\Pardakht\Http\HttpClient;
 use Eram\Pardakht\Http\Logger;
 use Eram\Pardakht\Http\PurchaseRequest;
 use Eram\Pardakht\Http\RedirectResponse;
-use Eram\Pardakht\Money\Amount;
+use Eram\Abzar\Money\Amount;
 use Eram\Pardakht\Transaction\Transaction;
 use Eram\Pardakht\Transaction\TransactionId;
 use Eram\Pardakht\Transaction\TransactionStatus;

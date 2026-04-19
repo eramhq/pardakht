@@ -1,6 +1,6 @@
 # Pardakht
 
-A unified, type-safe, zero-dependency PHP library for Iranian payment gateways.
+A unified, type-safe PHP library for Iranian payment gateways.
 
 [![Tests](https://github.com/eramhq/pardakht/actions/workflows/tests.yml/badge.svg)](https://github.com/eramhq/pardakht/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
@@ -14,7 +14,7 @@ Pardakht (پرداخت, "payment" in Farsi) is an omni-gateway PHP library that 
 
 **Why Pardakht?**
 
-- **Zero Composer dependencies** — relies only on standard PHP extensions (`ext-curl`, `ext-json`, `ext-openssl`, `ext-soap`). No Guzzle, no framework coupling, no supply-chain risk.
+- **Minimal dependencies** — one internal Composer package ([`eram/abzar`](https://github.com/eramhq/abzar-php), Persian/Iranian utilities) plus the standard PHP extensions `ext-curl`, `ext-json`, `ext-openssl`, `ext-soap`. No Guzzle, no framework coupling, no third-party supply-chain risk.
 - **Rial/Toman safety** — the `Amount` value object eliminates the 10x conversion bugs that plague Iranian e-commerce.
 - **One interface, every gateway** — `purchase()` → `verify()` → optionally `settle()`. Same flow whether it's Zarinpal or Mellat.
 - **Framework-agnostic** — works with Laravel, Symfony, or plain PHP. Plug in your own HTTP client, logger, or event dispatcher.

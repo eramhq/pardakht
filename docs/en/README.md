@@ -1,6 +1,6 @@
 # Pardakht Documentation
 
-Type-safe, zero-dependency PHP library for Iranian payment gateways.
+Type-safe PHP library for Iranian payment gateways.
 
 ## Learning Resources
 

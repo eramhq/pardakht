@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Eram\Pardakht\Transaction;
 
 use Eram\Pardakht\Contracts\TransactionInterface;
-use Eram\Pardakht\Money\Amount;
+use Eram\Abzar\Money\Amount;
 
 final class Transaction implements TransactionInterface
 {

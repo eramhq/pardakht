@@ -11,7 +11,7 @@ use Eram\Pardakht\Gateway\Zarinpal\ZarinpalGateway;
 use Eram\Pardakht\Http\HttpClient;
 use Eram\Pardakht\Http\HttpResponse;
 use Eram\Pardakht\Http\PurchaseRequest;
-use Eram\Pardakht\Money\Amount;
+use Eram\Abzar\Money\Amount;
 use Eram\Pardakht\Transaction\TransactionStatus;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;

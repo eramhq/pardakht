@@ -10,7 +10,7 @@ use Eram\Pardakht\Gateway\Mellat\MellatConfig;
 use Eram\Pardakht\Gateway\Mellat\MellatGateway;
 use Eram\Pardakht\Http\PurchaseRequest;
 use Eram\Pardakht\Http\SoapClientFactory;
-use Eram\Pardakht\Money\Amount;
+use Eram\Abzar\Money\Amount;
 use Eram\Pardakht\Transaction\TransactionStatus;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;

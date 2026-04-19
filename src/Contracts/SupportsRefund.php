@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Eram\Pardakht\Contracts;
 
-use Eram\Pardakht\Money\Amount;
+use Eram\Abzar\Money\Amount;
 
 /**
  * Implemented by gateways that support refunding payments.
