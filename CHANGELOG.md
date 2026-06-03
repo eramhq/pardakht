@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+## [1.0.0-beta.3] - 2026-06-03
+
+### Added
+- REST gateway: **Jibit** (IPG) — token-based two-key handshake (`/tokens`), then `/purchases` + `/purchases/{id}/verify`. Config: `JibitConfig(apiKey, secretKey)`.
+- REST gateway: **Paystar** (core.paystar.ir) — Bearer `gatewayId` auth with HMAC-SHA512 request signing on create + verify. Config: `PaystarConfig(gatewayId, signKey)`.
+- Both registered in `Pardakht::create()` / `Pardakht::available()`, with unit tests.
+
 ## [1.0.0-beta.2] - 2026-04-19
 
 ### Changed
@@ -37,4 +44,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 - Auto-submit HTML form generation for POST-based gateways
 - `Pardakht` manager class with gateway factory
 
+[1.0.0-beta.3]: https://github.com/eramhq/pardakht/releases/tag/v1.0.0-beta.3
+[1.0.0-beta.2]: https://github.com/eramhq/pardakht/releases/tag/v1.0.0-beta.2
 [1.0.0-beta.1]: https://github.com/eramhq/pardakht/releases/tag/v1.0.0-beta.1
