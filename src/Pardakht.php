@@ -7,6 +7,8 @@ namespace Eram\Pardakht;
 use Eram\Pardakht\Contracts\GatewayInterface;
 use Eram\Pardakht\Gateway\IDPay\IDPayConfig;
 use Eram\Pardakht\Gateway\IDPay\IDPayGateway;
+use Eram\Pardakht\Gateway\Jibit\JibitConfig;
+use Eram\Pardakht\Gateway\Jibit\JibitGateway;
 use Eram\Pardakht\Gateway\Mellat\MellatConfig;
 use Eram\Pardakht\Gateway\Mellat\MellatGateway;
 use Eram\Pardakht\Gateway\NextPay\NextPayConfig;
@@ -17,6 +19,8 @@ use Eram\Pardakht\Gateway\Pasargad\PasargadConfig;
 use Eram\Pardakht\Gateway\Pasargad\PasargadGateway;
 use Eram\Pardakht\Gateway\PayIr\PayIrConfig;
 use Eram\Pardakht\Gateway\PayIr\PayIrGateway;
+use Eram\Pardakht\Gateway\Paystar\PaystarConfig;
+use Eram\Pardakht\Gateway\Paystar\PaystarGateway;
 use Eram\Pardakht\Gateway\Sadad\SadadConfig;
 use Eram\Pardakht\Gateway\Sadad\SadadGateway;
 use Eram\Pardakht\Gateway\Saman\SamanConfig;
@@ -122,6 +126,18 @@ final class Pardakht
                 $this->logger,
                 $this->eventDispatcher,
             ),
+            'jibit' => new JibitGateway(
+                self::ensure($config, JibitConfig::class),
+                $this->httpClient,
+                $this->logger,
+                $this->eventDispatcher,
+            ),
+            'paystar' => new PaystarGateway(
+                self::ensure($config, PaystarConfig::class),
+                $this->httpClient,
+                $this->logger,
+                $this->eventDispatcher,
+            ),
             'payir' => new PayIrGateway(
                 self::ensure($config, PayIrConfig::class),
                 $this->httpClient,
@@ -159,7 +175,7 @@ final class Pardakht
     {
         return [
             'mellat', 'saman', 'parsian', 'sadad', 'pasargad',
-            'zarinpal', 'idpay', 'zibal', 'payir', 'nextpay', 'vandar', 'sizpay',
+            'zarinpal', 'idpay', 'zibal', 'jibit', 'paystar', 'payir', 'nextpay', 'vandar', 'sizpay',
         ];
     }
 
